@@ -1,10 +1,10 @@
 package codonmodels;
 
 import beast.base.core.Log;
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
-import org.apache.commons.math3.fitting.PolynomialCurveFitter;
-import org.apache.commons.math3.fitting.WeightedObservedPoint;
-import org.apache.commons.math3.fitting.WeightedObservedPoints;
+import org.apache.commons.math4.legacy.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math4.legacy.fitting.PolynomialCurveFitter;
+import org.apache.commons.math4.legacy.fitting.WeightedObservedPoint;
+import org.apache.commons.math4.legacy.fitting.WeightedObservedPoints;
 
 import java.util.ArrayList;
 import java.util.Arrays;

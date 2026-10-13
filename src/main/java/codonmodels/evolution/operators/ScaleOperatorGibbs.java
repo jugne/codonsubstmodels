@@ -75,11 +75,13 @@ public class ScaleOperatorGibbs extends ScaleOperator {
                     return -Math.log(scale);
                 } else {
                     // scale the beast.tree
-                    final int internalNodes = tree.scale(scale);
+                    // BEAST 3: tree.scale returns the log Jacobian (dof * log(scale)) instead of the
+                    // internal node count; mirror beast.base.evolution.operator.ScaleOperator.
+                    final double treeLogJacobian = tree.scale(scale);
 
 //                    gibbsSampler.gibbsSamplingAwayRoot(tree.getRoot(), this);
 
-                    return Math.log(scale) * (internalNodes - 2);
+                    return treeLogJacobian - 2 * Math.log(scale);
                 }
             }
 

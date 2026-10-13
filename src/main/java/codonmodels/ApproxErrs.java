@@ -4,8 +4,8 @@ import beast.base.inference.parameter.RealParameter;
 import codonmodels.evolution.alignment.CodonAlignment;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math4.legacy.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math4.legacy.analysis.polynomials.PolynomialSplineFunction;
 
 /**
  * @author Walter Xie

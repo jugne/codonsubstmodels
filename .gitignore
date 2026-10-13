@@ -1,3 +1,6 @@
+# Maven build output
+target/
+
 *.DS_Store
 *.pdf
 *.xlsx
@@ -5,7 +8,6 @@
 codeml
 evolver
 examples
-out
 perftest/
 .idea
 *.iml
@@ -37,5 +39,5 @@ hs_err_pid*
 *.iml
 *.ipr
 *.iws
-/bin/
-/build/
+
+

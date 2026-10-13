@@ -3,8 +3,8 @@ package codonmodels;
 import beast.base.core.Log;
 import codonmodels.util.RandomUtils;
 
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math4.legacy.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math4.legacy.analysis.polynomials.PolynomialSplineFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

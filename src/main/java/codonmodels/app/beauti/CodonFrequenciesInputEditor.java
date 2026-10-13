@@ -19,6 +19,11 @@ public class CodonFrequenciesInputEditor extends BEASTObjectInputEditor {
     CodonAlignment alignment;
 
 
+	// BEAST 3: JPMS service providers need a public no-arg constructor
+	public CodonFrequenciesInputEditor() {
+		super();
+	}
+
 	public CodonFrequenciesInputEditor(BeautiDoc doc) {
 		super(doc);
 	}

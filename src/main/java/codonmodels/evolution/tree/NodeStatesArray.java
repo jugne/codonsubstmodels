@@ -610,12 +610,10 @@ public class NodeStatesArray extends StateNode {
     }
 
 
-    @Override
     public int getDimension() { // use getInternalNodeCount() or getSiteCount()
         throw new UnsupportedOperationException("use getInternalNodeCount() or getSiteCount()");
     }
 
-    @Override
     public double getArrayValue(int dim) { // use getNodeStates(int)
         throw new UnsupportedOperationException("use getNodeStates(int)");
     }
@@ -766,7 +764,7 @@ public class NodeStatesArray extends StateNode {
         throw new UnsupportedOperationException("Unsupported");
     }
 
-    @Override
+    // BEAST 3: StateNode no longer declares scale(double); kept for API compatibility
     public int scale(double scale) {
         throw new UnsupportedOperationException("Unsupported");
     }
