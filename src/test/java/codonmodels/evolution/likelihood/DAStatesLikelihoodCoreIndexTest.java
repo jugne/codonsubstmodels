@@ -2,12 +2,12 @@ package codonmodels.evolution.likelihood;
 
 
 import codonmodels.evolution.CodonData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Build transition probability matrices under 3-node tree,
@@ -26,7 +26,7 @@ public class DAStatesLikelihoodCoreIndexTest {
     double[] p0;
     double[] p1;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CodonData.initDataTypes();
 

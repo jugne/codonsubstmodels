@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import beast.base.util.Randomizer;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
 
 /**
  * linear vs binary search.
@@ -128,13 +130,4 @@ public class BinarySearchBenchmarking {
         return cpd;
     }
 
-
-    // BEAST 2.8 build: main code cannot depend on JUnit, so a minimal replacement of Assert.assertArrayEquals
-    private static void assertArrayEquals(double[] expected, double[] actual, double delta) {
-        if (expected.length != actual.length)
-            throw new AssertionError("array lengths differ: " + expected.length + " vs " + actual.length);
-        for (int i = 0; i < expected.length; i++)
-            if (Math.abs(expected[i] - actual[i]) > delta)
-                throw new AssertionError("arrays differ at " + i + ": " + expected[i] + " vs " + actual[i]);
-    }
 }

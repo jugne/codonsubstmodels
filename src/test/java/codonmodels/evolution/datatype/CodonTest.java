@@ -3,14 +3,14 @@ package codonmodels.evolution.datatype;
 import beast.base.evolution.datatype.DataType;
 import beast.base.evolution.datatype.Nucleotide;
 import codonmodels.evolution.CodonData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Walter Xie
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class CodonTest {
     protected Codon codon;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         codon = CodonData.codonUNIVERSAL;
     }
@@ -27,19 +27,19 @@ public class CodonTest {
     public void testCodeMap(){
         int stateCount = codon.getStateCount();
         System.out.println("stateCount = " + stateCount);
-        assertEquals("Codon stateCount : ", 61, stateCount);
+        assertEquals(61, stateCount, "Codon stateCount : ");
 
         stateCount = codon.getStateCountAmbiguous();
         System.out.println("Max stateCount including ambiguous = " + stateCount);
-        assertEquals("Max stateCount including ambiguous : ", 122, stateCount);
+        assertEquals(122, stateCount, "Max stateCount including ambiguous : ");
 
         int codeLength = codon.getCodeLength();
         System.out.println("codeLength = " + codeLength);
-        assertEquals("Codon codeLength : ", 3, codeLength);
+        assertEquals(3, codeLength, "Codon codeLength : ");
 
         String codeMap = codon.getCodeMap();
         System.out.println("codeMap = " + codeMap);
-        assertEquals("Codon codeMap : ", codon.getTripletsNoStopCodon(), codeMap);
+        assertEquals(codon.getTripletsNoStopCodon(), codeMap, "Codon codeMap : ");
     }
 
     @SafeVarargs
@@ -57,7 +57,7 @@ public class CodonTest {
         // 1st and last
         data = "AAATTT";
         states = codon.stringToEncoding(data);
-        assertEquals("StringToEncoding : ", toList(0, 60), states);
+        assertEquals(toList(0, 60), states, "StringToEncoding : ");
 
         // stop codon
         Throwable caught = null;
@@ -93,26 +93,26 @@ public class CodonTest {
         // ambiguous
         data = "AA-A-----";
         states = codon.stringToEncoding(data);
-        assertEquals("StringToEncoding : ", toList(61, 109, 121), states);
+        assertEquals(toList(61, 109, 121), states, "StringToEncoding : ");
     }
 
     @Test
     public void testEncodingToString() {
         String data = codon.encodingToString(toList(0, 60));
-        assertEquals("StringToEncoding : ", "AAATTT", data);
+        assertEquals("AAATTT", data, "StringToEncoding : ");
         data = codon.encodingToString(toList(48, 50, 56));
-        assertNotSame("StringToEncoding : ", "TAATAGTGA", data);
+        assertNotSame("TAATAGTGA", data, "StringToEncoding : ");
         data = codon.encodingToString(toList(61, 109, 121));
-        assertEquals("StringToEncoding : ", "AA-A-----", data);
+        assertEquals("AA-A-----", data, "StringToEncoding : ");
     }
 
     @Test
     public void testNucleotideState() {
         Nucleotide nuc = new Nucleotide();
         int gapState = nuc.getCodeMap().indexOf(DataType.GAP_CHAR);
-        assertEquals("Nucleotide '-' state : ", Codon.NUC_GAP_STATE, gapState);
+        assertEquals(Codon.NUC_GAP_STATE, gapState, "Nucleotide '-' state : ");
         int missState = nuc.getCodeMap().indexOf(DataType.MISSING_CHAR);
-        assertEquals("Nucleotide '?' state : ", Codon.NUC_MISSING_STATE, missState);
+        assertEquals(Codon.NUC_MISSING_STATE, missState, "Nucleotide '?' state : ");
     }
 
     @Test
@@ -125,19 +125,19 @@ public class CodonTest {
             int state = states[i];
             String triplet = codon.stateToTriplet(state);
             System.out.println(state + "  " + triplet);
-            assertEquals("Triplet : ", triExpected[i], triplet);
+            assertEquals(triExpected[i], triplet, "Triplet : ");
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testGetTripletException1() {
-        codon.stateToTriplet(-1);
+        assertThrows(RuntimeException.class, () -> codon.stateToTriplet(-1));
     }
 
     // last state = getStateCountAmbiguous()-1
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testGetTripletException2() {
-        codon.stateToTriplet(codon.getStateCountAmbiguous());
+        assertThrows(RuntimeException.class, () -> codon.stateToTriplet(codon.getStateCountAmbiguous()));
     }
 
     @Test
@@ -145,19 +145,19 @@ public class CodonTest {
         int[] states = new int[]{0, 8, 60};
         String aa = codon.stateToAminoAcid(states);
         System.out.println("StateToAminoAcid : 0, 8, 60 => " + aa);
-        assertEquals("StateToAminoAcid : ", "KRF", aa);
+        assertEquals("KRF", aa, "StateToAminoAcid : ");
 
         // no stop codons
         states = new int[]{48, 50, 56};
         aa = codon.stateToAminoAcid(states);
         System.out.println("StateToAminoAcid : 48, 50, 56 => " + aa);
-        assertEquals("StateToAminoAcid : ", "YSC", aa);
+        assertEquals("YSC", aa, "StateToAminoAcid : ");
 
         // ambiguous states
         states = new int[]{61, 121};
         aa = codon.stateToAminoAcid(states);
         System.out.println("StateToAminoAcid : 61, 121 => " + aa);
-        assertEquals("StateToAminoAcid : ", "--", aa);
+        assertEquals("--", aa, "StateToAminoAcid : ");
 
         states = new int[]{125};
         Throwable caught = null;

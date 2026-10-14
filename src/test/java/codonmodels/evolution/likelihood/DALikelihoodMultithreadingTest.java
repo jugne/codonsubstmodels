@@ -1,18 +1,18 @@
 package codonmodels.evolution.likelihood;
 
 import beast.base.evolution.alignment.Alignment;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Tree;
 import beast.base.util.Randomizer;
 import codonmodels.CodonFrequencies;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.tree.NodeStatesArray;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -27,7 +27,7 @@ public class DALikelihoodMultithreadingTest {
 
 //    DecimalFormat df = new DecimalFormat("#.00");
 
-    @Before
+    @BeforeEach
     public void setUp() {
         CodonData.initDataTypes();
 
@@ -75,7 +75,7 @@ public class DALikelihoodMultithreadingTest {
         System.out.println("\nSetup the same internal node states.");
     }
 
-    @After
+    @AfterEach
     public void close() {
         for (int i = 0; i < threads.length; i++)
             testLds[i].shutdown(); // shut down ExecutorService

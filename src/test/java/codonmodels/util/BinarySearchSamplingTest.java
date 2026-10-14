@@ -1,12 +1,13 @@
 package codonmodels.util;
 
 import beast.base.util.Randomizer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * {@link Randomizer#randomChoice(double[])} seems faster than
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertArrayEquals;
  *
  * @author Walter Xie
  */
+@Tag("slow")
 public class BinarySearchSamplingTest {
 
     final int nrOfStates = 60;
@@ -27,7 +29,7 @@ public class BinarySearchSamplingTest {
     double[] prob;
     double[] cf;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // unnormalized probabilities
         double[] freq = new double[nrOfStates];

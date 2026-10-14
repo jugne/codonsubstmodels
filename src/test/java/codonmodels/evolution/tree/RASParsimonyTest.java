@@ -4,16 +4,16 @@ import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeInterface;
 import beast.base.util.Randomizer;
 import codonmodels.util.RandomUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * The test case is copied from Mark Holder's slides.
@@ -27,7 +27,7 @@ public class RASParsimonyTest {
     RASParsimony1Site downpass;
     RASParsimony1Site uppass;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         downpass = new RASParsimony1Site(tipStates, tree);
         uppass = new RASParsimony1Site(tipStates, tree);
@@ -38,9 +38,9 @@ public class RASParsimonyTest {
         downpass.printTipStates();
         System.out.println(tree);
 
-        assertEquals("Tips", 9, downpass.getTipsCount());
-        assertEquals("Internal nodes", 8, downpass.getInternalNodeCount());
-        assertEquals("All nodes", 17, downpass.getNodeCount());
+        assertEquals(9, downpass.getTipsCount(), "Tips");
+        assertEquals(8, downpass.getInternalNodeCount(), "Internal nodes");
+        assertEquals(17, downpass.getNodeCount(), "All nodes");
     }
 
     @Test
@@ -52,13 +52,13 @@ public class RASParsimonyTest {
         System.out.println("Down-pass : \n" + downpass.toString());
 
         Map<Integer, Set<Integer>> asMap = downpass.getAncestralStates();
-        assertEquals("Root (16)", new HashSet<>(Arrays.asList(0, 1)), asMap.get(16));
-        assertEquals("Node (11)", new HashSet<>(Arrays.asList(0, 1, 2)), asMap.get(11));
-        assertEquals("Node (10)", new HashSet<>(Arrays.asList(1, 2)), asMap.get(10));
-        assertEquals("Node (9)", new HashSet<>(Arrays.asList(0)), asMap.get(9));
+        assertEquals(new HashSet<>(Arrays.asList(0, 1)), asMap.get(16), "Root (16)");
+        assertEquals(new HashSet<>(Arrays.asList(0, 1, 2)), asMap.get(11), "Node (11)");
+        assertEquals(new HashSet<>(Arrays.asList(1, 2)), asMap.get(10), "Node (10)");
+        assertEquals(new HashSet<>(Arrays.asList(0)), asMap.get(9), "Node (9)");
 
         System.out.println("Parsimony score = " + score);
-        assertEquals("Parsimony score", 4, score);
+        assertEquals(4, score, "Parsimony score");
     }
 
 
@@ -74,10 +74,10 @@ public class RASParsimonyTest {
 
         System.out.println("Up-pass : \n" + uppass.toString());
         Map<Integer, Set<Integer>> asMap = uppass.getAncestralStates();
-        assertEquals("Root (16)", new HashSet<>(Arrays.asList(0, 1)), asMap.get(16));
-        assertEquals("Node (11)", new HashSet<>(Arrays.asList(0, 1)), asMap.get(11));
-        assertEquals("Node (10)", new HashSet<>(Arrays.asList(0, 1, 2)), asMap.get(10));
-        assertEquals("Node (9)", new HashSet<>(Arrays.asList(0)), asMap.get(9));
+        assertEquals(new HashSet<>(Arrays.asList(0, 1)), asMap.get(16), "Root (16)");
+        assertEquals(new HashSet<>(Arrays.asList(0, 1)), asMap.get(11), "Node (11)");
+        assertEquals(new HashSet<>(Arrays.asList(0, 1, 2)), asMap.get(10), "Node (10)");
+        assertEquals(new HashSet<>(Arrays.asList(0)), asMap.get(9), "Node (9)");
     }
 
     @Test
@@ -98,12 +98,12 @@ public class RASParsimonyTest {
         mpr.traverseMPR(tree.getRoot(), downpass.getAncestralStates(), uppass.getAncestralStates(), aS);
         // choose 1 at root
         System.out.println("Ancestral states : " + Arrays.toString(aS) );
-        assertArrayEquals("Ancestral states", new int[]{0, 1, 1, 0, 1, 1, 1, 1}, aS);
+        assertArrayEquals(new int[]{0, 1, 1, 0, 1, 1, 1, 1}, aS, "Ancestral states");
 
         // 4. validate AS change == parsimony score
         int change = mpr.countASChanges(tree.getRoot(), aS);
         System.out.println("Parsimony score = " + score + ", state change = " + change );
-        assertEquals("State change", score, change);
+        assertEquals(score, change, "State change");
 
         mpr.clearAncestralStates();
         aS = new int[mpr.getInternalNodeCount()];
@@ -112,11 +112,11 @@ public class RASParsimonyTest {
         mpr.traverseMPR(tree.getRoot(), downpass.getAncestralStates(), uppass.getAncestralStates(), aS);
         // choose 0 at root
         System.out.println("Ancestral states : " + Arrays.toString(aS) );
-        assertArrayEquals("Ancestral states", new int[]{0, 0, 0, 0, 0, 0, 0, 0}, aS);
+        assertArrayEquals(new int[]{0, 0, 0, 0, 0, 0, 0, 0}, aS, "Ancestral states");
 
         change = mpr.countASChanges(tree.getRoot(), aS);
         System.out.println("Parsimony score = " + score + ", state change = " + change );
-        assertEquals("State change", score, change);
+        assertEquals(score, change, "State change");
     }
 
     @Test
@@ -153,19 +153,19 @@ public class RASParsimonyTest {
         int rand = RandomUtils.randomSelect(tmpSet);
         System.out.println("Random state = " + rand);
 
-        assertEquals("Random state", 0, rand);
+        assertEquals(0, rand, "Random state");
 
         tmpSet = new HashSet<>(Arrays.asList(0, 1));
         System.out.println("Set 2 : " + Arrays.toString(tmpSet.toArray()) );
         Randomizer.setSeed(1);
         rand = RandomUtils.randomSelect(tmpSet);
         System.out.println("Random state = " + rand);
-        assertEquals("Random state", 1, rand);
+        assertEquals(1, rand, "Random state");
 
         Randomizer.setSeed(2);
         rand = RandomUtils.randomSelect(tmpSet);
         System.out.println("Random state = " + rand);
-        assertEquals("Random state", 0, rand);
+        assertEquals(0, rand, "Random state");
     }
 
 }

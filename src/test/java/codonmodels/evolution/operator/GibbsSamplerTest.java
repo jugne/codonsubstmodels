@@ -1,14 +1,14 @@
 package codonmodels.evolution.operator;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Walter Xie
  */
 public class GibbsSamplerTest {
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 

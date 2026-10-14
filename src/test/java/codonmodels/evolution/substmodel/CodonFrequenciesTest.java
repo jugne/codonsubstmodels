@@ -1,11 +1,13 @@
 package codonmodels.evolution.substmodel;
 
 import beast.base.evolution.alignment.Alignment;
+import beast.base.spec.inference.parameter.SimplexParam;
+import beast.base.spec.inference.parameter.SimplexParam;
 import codonmodels.CodonFrequencies;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.alignment.CodonAlignment;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -18,7 +20,7 @@ public class CodonFrequenciesTest {
 
     CodonAlignment codonAlignment;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         CodonData.initDataTypes();
 
@@ -71,25 +73,26 @@ public class CodonFrequenciesTest {
         int stateCount = codonAlignment.getMaxStateCount();
         assertEquals(60, stateCount);
 
-        // test dim
+        // test dim: 61 entries (a valid simplex) for a 60-state genetic code
         CodonFrequencies codonFreq = new CodonFrequencies();
+        double[] freq61 = new double[61];
+        Arrays.fill(freq61, 1.0/61.0);
         RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> codonFreq.initByName("data", codonAlignment, "frequencies",
-                        String.join(" ", Arrays.toString(new double[61]).replaceAll("[,\\[\\]]", "")))
+                () -> codonFreq.initByName("data", codonAlignment, "frequencies", new SimplexParam(freq61))
         );
         assertTrue(ex.getMessage().contains("frequencies input has 61 entries, but state count = 60"));
 
-        RuntimeException ex2 = assertThrows(RuntimeException.class,
-                () -> codonFreq.initByName("data", codonAlignment, "frequencies",
-                        String.join(" ", Arrays.toString(new double[60]).replaceAll("[,\\[\\]]", "")))
+        // BEAST 2.8: frequencies are a Simplex, so values that do not sum to 1 are rejected by
+        // SimplexParam itself before CodonFrequencies ever sees them (2.7 checked this in update()).
+        RuntimeException ex2 = assertThrows(IllegalArgumentException.class,
+                () -> new SimplexParam(new double[60])
         );
-        assertTrue(ex2.getMessage().contains("The codon frequencies do not sum up to 1"));
+        assertTrue(ex2.getMessage().contains("not valid for domain"));
 
         double[] freq = new double[60];
         Arrays.fill(freq, 1.0/60.0);
         // Asserts that all supplied executables do not throw exceptions.
-        assertAll(() -> codonFreq.initByName("data", codonAlignment, "frequencies",
-                String.join(" ", Arrays.toString(freq).replaceAll("[,\\[\\]]", ""))));
+        assertAll(() -> codonFreq.initByName("data", codonAlignment, "frequencies", new SimplexParam(freq)));
 
     }
 

@@ -1,19 +1,21 @@
 package codonmodels.evolution.substmodel;
 
-import beast.base.evolution.substitutionmodel.Frequencies;
-import beast.base.evolution.substitutionmodel.GTR;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.evolution.substitutionmodel.Frequencies;
+import beast.base.spec.evolution.substitutionmodel.GTR;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.SimplexParam;
 import beast.base.util.Randomizer;
-import org.apache.commons.math3.analysis.UnivariateFunction;
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
-import org.apache.commons.math3.optim.InitialGuess;
-import org.apache.commons.math3.optim.MaxEval;
-import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
-import org.apache.commons.math3.optim.univariate.BrentOptimizer;
-import org.apache.commons.math3.optim.univariate.SearchInterval;
-import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
-import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
+import org.apache.commons.math4.legacy.analysis.UnivariateFunction;
+import org.apache.commons.math4.legacy.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math4.legacy.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math4.legacy.optim.InitialGuess;
+import org.apache.commons.math4.legacy.optim.MaxEval;
+import org.apache.commons.math4.legacy.optim.nonlinear.scalar.GoalType;
+import org.apache.commons.math4.legacy.optim.univariate.BrentOptimizer;
+import org.apache.commons.math4.legacy.optim.univariate.SearchInterval;
+import org.apache.commons.math4.legacy.optim.univariate.UnivariateObjectiveFunction;
+import org.apache.commons.math4.legacy.optim.univariate.UnivariatePointValuePair;
 
 import java.util.Arrays;
 
@@ -27,7 +29,7 @@ public class ApproximateSubstModelTest {
 
 	private void run() {
 		Randomizer.setSeed(127196);
-        Double [] f = new Double[]{Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble()};
+        double [] f = new double[]{Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble()};
         double sum = 0;
         for (double d : f) {
         	sum += d;
@@ -35,20 +37,19 @@ public class ApproximateSubstModelTest {
         for (int i = 0; i < 4; i++) {
         	f[i] = f[i] / sum;
         }
-		String pi = f[0] + " " + f[1] + " " + f[2] + " " + f[3];
-		RealParameter f2 = new RealParameter(pi);
+		SimplexParam f2 = new SimplexParam(f);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("frequencies", f2, "estimate", false);
 
         GTR gtr = new GTR();
-        Double [] rates = new Double[]{Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble()};
-        gtr.initByName("rateAC", new RealParameter(rates[0]+""),
-        		"rateAG", new RealParameter(rates[1]+""),
-        		"rateAT", new RealParameter(rates[2]+""),
-        		"rateCG", new RealParameter(rates[3]+""),
-        		"rateCT", new RealParameter(rates[4]+""),
-        		"rateGT", new RealParameter(rates[5]+""),
+        double [] rates = new double[]{Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble(),Randomizer.nextDouble()};
+        gtr.initByName("rateAC", new RealScalarParam<>(rates[0], PositiveReal.INSTANCE),
+        		"rateAG", new RealScalarParam<>(rates[1], PositiveReal.INSTANCE),
+        		"rateAT", new RealScalarParam<>(rates[2], PositiveReal.INSTANCE),
+        		"rateCG", new RealScalarParam<>(rates[3], PositiveReal.INSTANCE),
+        		"rateCT", new RealScalarParam<>(rates[4], PositiveReal.INSTANCE),
+        		"rateGT", new RealScalarParam<>(rates[5], PositiveReal.INSTANCE),
         		"frequencies", freqs);
 
         double t = 0;

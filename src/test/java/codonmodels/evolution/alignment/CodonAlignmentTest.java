@@ -6,14 +6,14 @@ import beast.base.evolution.datatype.DataType;
 import beast.pkgmgmt.BEASTClassLoader;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.datatype.Codon;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class CodonAlignmentTest {
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CodonData.initDataTypes();
     }
@@ -37,7 +37,7 @@ public class CodonAlignmentTest {
         // define codon triplets states as indices of Codon.CODON_TRIPLETS
         for (int i=0; i < codonStates.size(); i++) {
             int tripletState = codonStates.get(i);
-            assertEquals("Triplets states : ", i, tripletState);
+            assertEquals(i, tripletState, "Triplets states : ");
         }
     }
 
@@ -45,7 +45,7 @@ public class CodonAlignmentTest {
     public void testGettingDataType() {
         Set<String> dataTypes = BEASTClassLoader.loadService(DataType.class);
         System.out.println(dataTypes);
-        assertTrue("Cannot load Codon data type !", dataTypes.contains(Codon.class.getName()));
+        assertTrue(dataTypes.contains(Codon.class.getName()), "Cannot load Codon data type !");
     }
 
     @Test
@@ -62,11 +62,11 @@ public class CodonAlignmentTest {
         int state = codon.stringToEncoding("ATC").get(0);
         int[] expectedUsage = new int[]{21,22,16,16,18,19};
         for (int i=0; i < usage.length; i++)
-            assertEquals("ATC frequency at taxon " + i, expectedUsage[i], usage[i][state]);
+            assertEquals(expectedUsage[i], usage[i][state], "ATC frequency at taxon " + i);
 
         state = codon.stringToEncoding("TTA").get(0);
         expectedUsage = new int[]{7,6,9,9,10,10};
         for (int i=0; i < usage.length; i++)
-            assertEquals("ATC frequency at taxon " + i, expectedUsage[i], usage[i][state]);
+            assertEquals(expectedUsage[i], usage[i][state], "ATC frequency at taxon " + i);
     }
 }

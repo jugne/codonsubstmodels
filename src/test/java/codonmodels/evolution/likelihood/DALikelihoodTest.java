@@ -2,19 +2,19 @@ package codonmodels.evolution.likelihood;
 
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
-import beast.base.evolution.likelihood.TreeLikelihood;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Tree;
 import codonmodels.CodonFrequencies;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.tree.NodeStatesArray;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -29,7 +29,7 @@ public class DALikelihoodTest {
 
 //    DecimalFormat df = new DecimalFormat("#.00");
 
-    @Before
+    @BeforeEach
     public void setUp() {
         CodonData.initDataTypes();
 //        String newickTree = "(t1:0.5, t2:0.0):0.0;"; // TODO bug for 0 branch length ?

@@ -2,17 +2,22 @@ package codonmodels.evolution;
 
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
-import beast.base.evolution.likelihood.TreeLikelihood;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.evolution.datatype.DataType;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeParser;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.sitemodel.SiteModel;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.SimplexParam;
 import beast.pkgmgmt.BEASTClassLoader;
 import codonmodels.CodonFrequencies;
 import codonmodels.M0Model;
 import codonmodels.evolution.datatype.Codon;
 
-import java.io.File;
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author Walter Xie
@@ -21,14 +26,20 @@ public class CodonData {
 
     public static final Codon codonUNIVERSAL = new Codon();
 
+    /**
+     * BEAST 2.8: the Codon data type is a JPMS service (module-info.java 'provides') and is also
+     * listed in version.xml, which surefire exposes through the BEAST_PACKAGE_PATH system property.
+     * Nothing is registered by hand any more; this only checks that discovery works.
+     */
     public static void initDataTypes() {
-        String PROJECT_DIR = System.getProperty("user.dir");
-        System.out.println("user.dir = " + PROJECT_DIR);
-        File versionXML = new File(PROJECT_DIR + File.separator + "version.xml");
-        if (!versionXML.exists())
-            throw new IllegalArgumentException("Cannot locate codonsubstmodels/version.xml !");
-        BEASTClassLoader.initServices();
-        BEASTClassLoader.addServices(versionXML.getAbsolutePath());
+        Set<String> dataTypes = BEASTClassLoader.loadService(DataType.class);
+        if (!dataTypes.contains(Codon.class.getName()))
+            throw new IllegalStateException("Codon data type not discovered as a service (check module-info.java and version.xml); found " + dataTypes);
+    }
+
+    /** space separated frequencies (as written in the 2.7 tests) to a SimplexParam */
+    public static SimplexParam toSimplex(String spaceSeparated) {
+        return new SimplexParam(Arrays.stream(spaceSeparated.trim().split("\\s+")).mapToDouble(Double::parseDouble).toArray());
     }
 
 
@@ -69,8 +80,8 @@ public class CodonData {
     }
 
     public static SiteModel getSiteModel(String omegaValue, String kappaValue, CodonFrequencies codonFreq, boolean verbose) {
-        RealParameter omega = new RealParameter(omegaValue);
-        RealParameter kappa = new RealParameter(kappaValue);
+        RealScalarParam<NonNegativeReal> omega = new RealScalarParam<>(Double.parseDouble(omegaValue), NonNegativeReal.INSTANCE);
+        RealScalarParam<PositiveReal> kappa = new RealScalarParam<>(Double.parseDouble(kappaValue), PositiveReal.INSTANCE);
 
         M0Model m0 = new M0Model();
         m0.initByName("omega", omega, "kappa", kappa, "frequencies", codonFreq, "verbose", verbose);

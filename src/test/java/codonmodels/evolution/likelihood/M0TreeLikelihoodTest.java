@@ -1,14 +1,14 @@
 package codonmodels.evolution.likelihood;
 
 import beast.base.evolution.alignment.Alignment;
-import beast.base.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
 import codonmodels.CodonFrequencies;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.alignment.CodonAlignment;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Walter Xie
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class M0TreeLikelihoodTest {
     CodonAlignment codonAlignment;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         CodonData.initDataTypes();
 
@@ -89,7 +89,7 @@ public class M0TreeLikelihoodTest {
     @Test
     public void testLikelihoodGivenEqualFreq() {
         CodonFrequencies codonFreq = new CodonFrequencies();
-        codonFreq.initByName("data", codonAlignment, "frequencies",
+        codonFreq.initByName("data", codonAlignment, "frequencies", CodonData.toSimplex(
                 "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
                         "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
                         "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
@@ -104,7 +104,7 @@ public class M0TreeLikelihoodTest {
                         "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
                         "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
                         "0.016666666666666666 0.016666666666666666 0.016666666666666666 0.016666666666666666 " +
-                        "0.016666666666666666 0.016666666666666666 0.016666666666666666");
+                        "0.016666666666666666 0.016666666666666666 0.016666666666666666"));
 
         String newickTree = "((Human_Horai: 0.013346, Human_Arnason: 0.013346): 0.191383," +
                 "(Chimp_Horai: 0.003004, Chimp_Arnason: 0.003004): 0.201725, (Gorilla_Horai: 0.003761, " +
@@ -119,7 +119,7 @@ public class M0TreeLikelihoodTest {
     @Test
     public void testLikelihoodGivenF3X4Freqs() {
         CodonFrequencies codonFreq = new CodonFrequencies();
-        codonFreq.initByName("data", codonAlignment, "frequencies",
+        codonFreq.initByName("data", codonAlignment, "frequencies", CodonData.toSimplex(
                 // copied from F3X4 after change decimal place to 20 in printCodonFrequencies()
                 "0.02704482396143513 0.028943334782568986 0.0035462749300424878 0.012035842186810867 " +
                         "0.04634205909572173 0.04959521026403068 0.006076640861558214 0.020623750802864244 " +
@@ -135,7 +135,7 @@ public class M0TreeLikelihoodTest {
                         "0.0032463610143627893 0.011017952533594923 0.012471518239643547 0.005186175901633951 " +
                         "0.01996852952905083 0.021370293853606715 0.0026183899647364665 0.008886656850014673 " +
                         "0.005223965155432802 0.005590680590185039 6.849967554805926E-4 0.002324837473146254 " +
-                        "0.024914295356679515 0.026663245891651723 0.003266907603061288 0.011087686410389827");
+                        "0.024914295356679515 0.026663245891651723 0.003266907603061288 0.011087686410389827"));
 
         String newickTree = "((Human_Horai: 0.012988, Human_Arnason: 0.012988): 0.245731, " +
                 "(Chimp_Horai: 0.002959, Chimp_Arnason: 0.002959): 0.255761, (Gorilla_Horai: 0.003918, " +

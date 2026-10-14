@@ -1,21 +1,23 @@
 package codonmodels.evolution.substmodel;
 
 import beast.base.evolution.alignment.Alignment;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.parameter.RealScalarParam;
 import codonmodels.CodonFrequencies;
 import codonmodels.M0Model;
 import codonmodels.evolution.CodonData;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.datatype.Codon;
 import codonmodels.util.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Instantaneous rate q_ij can be 0, but the transition prob p_ij(t) cannot.
@@ -26,7 +28,7 @@ public class M0ModelTest {
     M0Model m0Model;
     Codon codon;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         CodonData.initDataTypes();
 
@@ -41,8 +43,8 @@ public class M0ModelTest {
         codonFreq.initByName("pi", "F3X4", "data", codonAlignment, "verbose", true);
 
         // omega 0.1, kappa 1
-        RealParameter omega = new RealParameter("0.1");
-        RealParameter kappa = new RealParameter("1");
+        RealScalarParam<NonNegativeReal> omega = new RealScalarParam<>(0.1, NonNegativeReal.INSTANCE);
+        RealScalarParam<PositiveReal> kappa = new RealScalarParam<>(1, PositiveReal.INSTANCE);
 
         m0Model = new M0Model();
         m0Model.initByName("omega", omega, "kappa", kappa, "frequencies", codonFreq, "verbose", true);
@@ -77,6 +79,6 @@ public class M0ModelTest {
         }
 
         for (int i=0; i < prob.length; i++)
-            assertTrue("Transition prob[" + i +"] = 0 !", prob[i] > 0);
+            assertTrue(prob[i] > 0, "Transition prob[" + i +"] = 0 !");
     }
 }

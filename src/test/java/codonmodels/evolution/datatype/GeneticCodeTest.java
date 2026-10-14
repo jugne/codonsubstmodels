@@ -1,12 +1,12 @@
 package codonmodels.evolution.datatype;
 
 import codonmodels.evolution.CodonData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Walter Xie
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class GeneticCodeTest {
     protected GeneticCode geneticCode;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         geneticCode = GeneticCode.UNIVERSAL;
     }
@@ -24,7 +24,7 @@ public class GeneticCodeTest {
     @Test
     public void testStopCodonIndexInCodeTable() {
         int[] indices = geneticCode.getStopCodonIndices();
-        assertArrayEquals("Stop codon : ", new int[]{48, 50, 56}, indices);
+        assertArrayEquals(new int[]{48, 50, 56}, indices, "Stop codon : ");
 
         assertTrue(geneticCode.isStopCodonIndex(48));
         assertTrue(geneticCode.isStopCodonIndex(50));
@@ -40,7 +40,7 @@ public class GeneticCodeTest {
 
         GeneticCode geneticCode2 = GeneticCode.VERTEBRATE_MT;
         indices = geneticCode2.getStopCodonIndices();
-        assertArrayEquals("Stop codon : ", new int[]{8,10,48,50}, indices);
+        assertArrayEquals(new int[]{8,10,48,50}, indices, "Stop codon : ");
 
         assertTrue(geneticCode2.isStopCodonIndex(8));
         assertTrue(geneticCode2.isStopCodonIndex(10));
@@ -66,8 +66,8 @@ public class GeneticCodeTest {
             Character aa = geneticCode.getAminoAcidFromCodeTable(index);
             String tri = Codon.CODON_TRIPLETS[index];
             System.out.println(index + "\t" + tri + "\t" + aa);
-            assertEquals("Triplet : ", triExpected[i], tri);
-            assertEquals("Amino Acid : ", aaExpected[i], aa);
+            assertEquals(triExpected[i], tri, "Triplet : ");
+            assertEquals(aaExpected[i], aa, "Amino Acid : ");
         }
     }
 
@@ -90,8 +90,8 @@ public class GeneticCodeTest {
             Character aa = GeneticCode.AMINOACID_CHARS[aaState];
             String tri = codon.encodingToString(new int[]{state});
             System.out.println(state + "\t" + tri + "\t" + aaState + "\t" + aa);
-            assertEquals("Triplet : ", triExpected[i], tri);
-            assertEquals("Amino Acid : ", aaExpected[i], aa);
+            assertEquals(triExpected[i], tri, "Triplet : ");
+            assertEquals(aaExpected[i], aa, "Amino Acid : ");
         }
     }
 
