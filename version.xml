@@ -35,10 +35,6 @@
         <provider classname="codonmodels.evolution.datatype.Codon"/>
     </service>
 
-    <service type="beastfx.app.inputeditor.InputEditor">
-        <provider classname="codonmodels.app.beauti.CodonFrequenciesInputEditor"/>
-    </service>
-
 
 </package>
 

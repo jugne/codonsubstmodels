@@ -46,7 +46,4 @@ open module codonmodels {
 
     provides beast.base.evolution.datatype.DataType with
         codonmodels.evolution.datatype.Codon;
-
-    provides beastfx.app.inputeditor.InputEditor with
-        codonmodels.app.beauti.CodonFrequenciesInputEditor;
 }
