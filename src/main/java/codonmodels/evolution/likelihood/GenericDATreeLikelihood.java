@@ -7,10 +7,10 @@ import beast.base.inference.Distribution;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.inference.State;
-import beast.base.evolution.branchratemodel.BranchRateModel;
-import beast.base.evolution.branchratemodel.StrictClockModel;
-import beast.base.evolution.sitemodel.SiteModel;
 import beast.base.evolution.sitemodel.SiteModelInterface;
+import beast.base.spec.evolution.branchratemodel.Base;
+import beast.base.spec.evolution.branchratemodel.StrictClockModel;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
 import beast.base.evolution.tree.TreeInterface;
 import codonmodels.CodonSubstitutionModel;
@@ -36,7 +36,7 @@ public class GenericDATreeLikelihood extends Distribution {
 	final public Input<SiteModelInterface> siteModelInput = new Input<>("siteModel",
 			"site model for leafs in the beast.tree", Validate.REQUIRED);
     
-    final public Input<BranchRateModel.Base> branchRateModelInput = new Input<>("branchRateModel",
+    final public Input<Base> branchRateModelInput = new Input<>("branchRateModel",
             "A model describing the rates on the branches of the beast.tree.");
 
     /** data, tree and models **/
@@ -51,7 +51,7 @@ public class GenericDATreeLikelihood extends Distribution {
 	/**
 	 * {@link SiteModel}
 	 */
-	protected SiteModel.Base siteModel;
+	protected SiteModel siteModel;
 	/**
 	 * Substitution model, which is from {@link SiteModel}.
 	 */
@@ -59,7 +59,7 @@ public class GenericDATreeLikelihood extends Distribution {
 	/**
 	 * molecular clock model, default to {@link StrictClockModel}
 	 */
-	protected BranchRateModel.Base branchRateModel;
+	protected Base branchRateModel;
 
 
 	@Override
@@ -70,10 +70,10 @@ public class GenericDATreeLikelihood extends Distribution {
 		tree = treeInput.get();
 
 		// models
-		if (!(siteModelInput.get() instanceof SiteModel.Base)) {
-			throw new IllegalArgumentException("siteModel input should be of type SiteModel.Base");
+		if (!(siteModelInput.get() instanceof SiteModel)) {
+			throw new IllegalArgumentException("siteModel input should be of type SiteModel");
 		}
-		siteModel = (SiteModel.Base) siteModelInput.get();
+		siteModel = (SiteModel) siteModelInput.get();
 		// set data type from NodesStates
 		siteModel.setDataType(nodesStates.getCodonDataType());
 		substitutionModel = (CodonSubstitutionModel) siteModel.getSubstitutionModel();
@@ -96,7 +96,7 @@ public class GenericDATreeLikelihood extends Distribution {
 		return tree;
 	}
 
-	public SiteModel.Base getSiteModel() {
+	public SiteModel getSiteModel() {
 		return siteModel;
 	}
 
@@ -104,7 +104,7 @@ public class GenericDATreeLikelihood extends Distribution {
 		return substitutionModel;
 	}
 
-	public BranchRateModel.Base getBranchRateModel() {
+	public Base getBranchRateModel() {
 		return branchRateModel;
 	}
 

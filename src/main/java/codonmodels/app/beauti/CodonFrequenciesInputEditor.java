@@ -5,7 +5,7 @@ import beastfx.app.inputeditor.BEASTObjectInputEditor;
 import beastfx.app.inputeditor.BeautiDoc;
 import beast.base.core.BEASTInterface;
 import beast.base.core.Input;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.type.Simplex;
 import codonmodels.CodonFrequencies;
 import codonmodels.evolution.alignment.CodonAlignment;
 import javafx.scene.control.ComboBox;
@@ -15,11 +15,11 @@ import java.util.Arrays;
 
 
 public class CodonFrequenciesInputEditor extends BEASTObjectInputEditor {
-    RealParameter freqsParameter;
+    Simplex freqsParameter;
     CodonAlignment alignment;
 
 
-	// BEAST 3: JPMS service providers need a public no-arg constructor
+	// BEAST 2.8: JPMS service providers need a public no-arg constructor
 	public CodonFrequenciesInputEditor() {
 		super();
 	}

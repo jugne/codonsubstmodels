@@ -3,16 +3,18 @@ package codonmodels;
 
 
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.evolution.datatype.Aminoacid;
 import beast.base.evolution.datatype.DataType;
 import codonmodels.evolution.datatype.Codon;
 import codonmodels.evolution.datatype.GeneticCode;
-import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.evolution.substitutionmodel.BasicGeneralSubstitutionModel;
+import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.type.RealVector;
 import beast.base.evolution.tree.Node;
-import beast.base.inference.parameter.RealParameter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -21,20 +23,20 @@ import java.util.List;
 @Description("General codon substitution model "
 		+ "based on nucleotide substitution models + "
 		+ "non/synonymous model")
-public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
+public class GeneralCodonSubstitutionModel extends BasicGeneralSubstitutionModel {
 	
-	final public Input<List<GeneralSubstitutionModel>> substmodelInput = new Input<>("substModel", 
+	final public Input<List<BasicGeneralSubstitutionModel>> substmodelInput = new Input<>("substModel", 
 			"nucleotide subsitution model, either 1 shared among codon positions, "
 			+ "or 3 seperate for each codon position", new ArrayList<>());
 	
-	final public Input<RealParameter> mnmPenaltyInput = new Input<>("mnmPenalty", "multi-nucleotide mutation pentalty (multiplied with rate) "
+	final public Input<RealVector<NonNegativeReal>> mnmPenaltyInput = new Input<>("mnmPenalty", "multi-nucleotide mutation pentalty (multiplied with rate) "
 			+ "Set to zero if no more than 1 mutation is allowed (as in the M0 model). "
 			+ "if dimension=2: multiplier penalty for 2 mutations + multiplier penalty for 3 mutations."
 			+ "if dimension=1: multiplier penalties for both 2 and 3 mutations", Validate.REQUIRED);
 	
-	final public Input<RealParameter> substRateInput = new Input<>("substitutionRate","substitution rate for the three codon positions, if specified");
+	final public Input<RealVector<PositiveReal>> substRateInput = new Input<>("substitutionRate","substitution rate for the three codon positions, if specified");
 	
-	final public Input<RealParameter> omegaInput = new Input<>("omega",
+	final public Input<RealVector<NonNegativeReal>> omegaInput = new Input<>("omega",
             "omega parameter to represent the nonsynonymous-synonymous rate ratio", Input.Validate.REQUIRED);
 
 	final public Input<String> categoriesInput = new Input<>("categories",
@@ -48,14 +50,10 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
 	protected int [] fromAA, toAA;
 	protected int [] category;
 	
-	protected List<GeneralSubstitutionModel> substModels;
+	protected List<BasicGeneralSubstitutionModel> substModels;
 	
     protected GeneticCode geneticCode;
-    protected RealParameter substRate;
-
-    public GeneralCodonSubstitutionModel() {
-        ratesInput.setRule(Input.Validate.FORBIDDEN); // only use internally
-    }
+    protected RealVector<PositiveReal> substRate;
 
     protected String [] categories;
     public String[] getCategories() {return categories;}
@@ -105,17 +103,19 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
         
         substRate = substRateInput.get();
         if (substRate == null) {
-        	substRate = new RealParameter("1.0");
+        	substRate = new RealVectorParam<>(new double[]{1.0}, PositiveReal.INSTANCE);
         }
     
-        if (omegaInput.get().getDimension() != categories.length + 1) {
-        	omegaInput.get().setDimension(categories.length + 1);
+        if (omegaInput.get().size() != categories.length + 1) {
+        	// BEAST 2.8: a RealVector cannot be resized here (2.7 silently called setDimension)
+        	throw new IllegalArgumentException("omega must have " + (categories.length + 1)
+        			+ " entries (number of categories + 1), but has " + omegaInput.get().size());
         }
     }
 
     /**
      * Faster code to replace
-     * {@link GeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
+     * {@link BasicGeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
      *
      * @param startTime parent.getHeight()
      * @param endTime   node.getHeight()
@@ -132,7 +132,7 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
 
     /**
      * Faster code to replace
-     * {@link GeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
+     * {@link BasicGeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
      * @param distance  distance = (startTime - endTime) * mean branch rate * rate for a site category.
      * @param iexp      iexp, without creating a new matrix each call.
      * @param matrix    P(t), without creating a new matrix each call.
@@ -302,11 +302,10 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
     @Override
 	public void setupRelativeRates() {
     	int rateCount = mutationCount.length;
-        RealParameter omega = omegaInput.get();
-        Function mnmPenalty = mnmPenaltyInput.get();
-        double mnmPenalty2 = mnmPenalty == null ? 0.0 : mnmPenalty.getArrayValue();
+        RealVector<NonNegativeReal> mnmPenalty = mnmPenaltyInput.get();
+        double mnmPenalty2 = mnmPenalty == null ? 0.0 : mnmPenalty.get(0);
         double mnmPenalty3 = mnmPenalty == null ? 0.0 : 
-        	(mnmPenalty.getDimension() > 1 ? mnmPenalty.getArrayValue(1) : mnmPenalty2);
+        	(mnmPenalty.size() > 1 ? mnmPenalty.get(1) : mnmPenalty2);
 
         substModels.get(0).setupRelativeRates();
         if (substModels.size() > 1) {
@@ -318,16 +317,16 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
         double [] r2 = substModels.size() > 1 ? substModels.get(1).getRelativeRates() : r1;
         double [] r3 = substModels.size() > 1 ? substModels.get(2).getRelativeRates() : r1;
         
-        if (substRate.getDimension() == 3) {
-	        double s = substRate.getValue(0);
+        if (substRate.size() == 3) {
+	        double s = substRate.get(0);
 	        for (int i = 0; i < r1.length; i++) {
 	        	r1[i] *= s;
 	        }
-	        s = substRate.getValue(1);
+	        s = substRate.get(1);
 	        for (int i = 0; i < r2.length; i++) {
 	        	r2[i] *= s;
 	        }
-	        s = substRate.getValue(2);
+	        s = substRate.get(2);
 	        for (int i = 0; i < r3.length; i++) {
 	        	r3[i] *= s;
 	        }
@@ -371,6 +370,6 @@ public class GeneralCodonSubstitutionModel extends GeneralSubstitutionModel {
 		if (index < 0) {
 			return 1.0;
 		}
-		return omegaInput.get().getArrayValue(index);
+		return omegaInput.get().get(index);
 	}
 }

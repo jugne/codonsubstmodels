@@ -5,8 +5,8 @@ import beast.base.core.Citation;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Log;
-import beast.base.evolution.substitutionmodel.Frequencies;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.evolution.substitutionmodel.Frequencies;
+import beast.base.spec.type.Simplex;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.datatype.Codon;
 import codonmodels.evolution.datatype.GeneticCode;
@@ -87,17 +87,17 @@ public class CodonFrequencies extends Frequencies {
     @Override
     protected void update() {
         // 60/61 codon frequencies (separated by white space) are in fixed order AAA AAC AAG AAT ... TTA TTC TTG TTT
-        RealParameter freqsInput = frequenciesInput.get();
+        Simplex freqsInput = frequenciesInput.get();
 
         if (freqsInput != null) {
-            if (freqsInput.getDimension() != codonStateCount)
-                throw new IllegalArgumentException("frequencies input has " + freqsInput.getDimension() +
+            if (freqsInput.size() != codonStateCount)
+                throw new IllegalArgumentException("frequencies input has " + freqsInput.size() +
                         " entries, but state count = " + codonStateCount + " !" );
 
-            freqs = new double[freqsInput.getDimension()];
+            freqs = new double[freqsInput.size()];
             double sum = 0;
             for (int i = 0; i < freqs.length; i++) {
-                freqs[i] = freqsInput.getValue(i);
+                freqs[i] = freqsInput.get(i);
                 sum += freqs[i];
             }
             if (Math.round(sum * 1.0e6) / 1.0e6 != 1) // see also Frequencies.initAndValidate

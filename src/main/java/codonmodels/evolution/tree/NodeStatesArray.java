@@ -764,7 +764,7 @@ public class NodeStatesArray extends StateNode {
         throw new UnsupportedOperationException("Unsupported");
     }
 
-    // BEAST 3: StateNode no longer declares scale(double); kept for API compatibility
+    // BEAST 2.8: StateNode no longer declares scale(double); kept for API compatibility
     public int scale(double scale) {
         throw new UnsupportedOperationException("Unsupported");
     }

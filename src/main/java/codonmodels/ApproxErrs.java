@@ -1,6 +1,8 @@
 package codonmodels;
 
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.parameter.RealScalarParam;
 import codonmodels.evolution.alignment.CodonAlignment;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
@@ -142,8 +144,8 @@ public class ApproxErrs {
         CodonFrequencies codonFreq = new CodonFrequencies();
         codonFreq.initByName("pi", "equal", "data", codonAlignment, "verbose", true);
 
-        RealParameter omegaPara = new RealParameter("0.08");
-        RealParameter kappaPara = new RealParameter("15");
+        RealScalarParam<NonNegativeReal> omegaPara = new RealScalarParam<>(0.08, NonNegativeReal.INSTANCE);
+        RealScalarParam<PositiveReal> kappaPara = new RealScalarParam<>(15, PositiveReal.INSTANCE);
 
         M0Model m0Model = new M0Model();
         m0Model.initByName("omega", omegaPara, "kappa", kappaPara,

@@ -31,7 +31,13 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.core.Log;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.evolution.substitutionmodel.Frequencies;
+import beast.base.spec.inference.parameter.SimplexParam;
+import beast.base.spec.type.RealScalar;
+import beast.base.spec.type.RealVector;
+import codonmodels.evolution.datatype.Codon;
 
 /**
  * Empirical model of codon evolution
@@ -40,9 +46,18 @@ import beast.base.inference.parameter.RealParameter;
  * @author Stefan Zoller
  */
 @Description("Empirical model of codon evolution")
-public class EmpiricalCodonModel extends M0Model {
+public class EmpiricalCodonModel extends CodonSubstitutionModel {
+
+	// BEAST 2.8 (D3): no longer inherits kappa/omega from M0Model, because kappa here is a
+	// vector of 2 (ECM+omega+2k) or 9 (ECM+omega+9k) values while M0's kappa is a scalar.
+	final public Input<RealScalar<NonNegativeReal>> omegaInput = new Input<>("omega",
+            "omega parameter to represent the nonsynonymous-synonymous rate ratio");
+
+	final public Input<RealVector<PositiveReal>> kappaInput = new Input<>("kappa",
+            "kappa parameters: 2 values (transition, transversion) for ECM+omega+2k, "
+            + "or 9 values for ECM+omega+9k. If not specified, ECM+omega (or ECM+omega+nu) is used");
 	
-	final public Input<RealParameter> mnmPenaltyInput = new Input<>("mnm-penalty", "multi-nucleotide mutation penalty. "
+	final public Input<RealVector<NonNegativeReal>> mnmPenaltyInput = new Input<>("mnm-penalty", "multi-nucleotide mutation penalty. "
 			+ "If specified, when 2 or 3 mutations are involved the rate is penalised by this parameter. "
 			+ "Lower values mean lower likelihood of MNMs. "
 			+ "If not specified, all mnm rates are set to 0.");
@@ -55,7 +70,7 @@ public class EmpiricalCodonModel extends M0Model {
 	final public Input<String> freqFileInput = new Input<>("freqFile", "name of comma separated file containing "
 			+ "empirical frequencies", "freqs.csv");
 		
-	private RealParameter mnmPenalty;
+	private RealVector<NonNegativeReal> mnmPenalty;
 	private EmpiricalRateMatrixReader rateMat;
 	
 	private int modelType;
@@ -66,8 +81,8 @@ public class EmpiricalCodonModel extends M0Model {
 
 
 	public EmpiricalCodonModel() {
-		kappaInput.setRule(Validate.OPTIONAL);
-		omegaInput.setRule(Validate.OPTIONAL);
+		// BEAST 2.8 (D7): frequencies are optional; if absent they are derived from freqFile
+		frequenciesInput.setRule(Validate.OPTIONAL);
 	}
 	
 	/**
@@ -83,40 +98,61 @@ public class EmpiricalCodonModel extends M0Model {
 
 	@Override
 	public void initAndValidate() {
+		// BEAST 2.8 (D7): honour a user-supplied frequencies input (ECM+F), otherwise derive the
+		// equilibrium frequencies from the empirical frequency file, as the spec
+		// EmpiricalSubstitutionModel does. The derived Frequencies must be in place before
+		// CodonSubstitutionModel.initAndValidate reads it.
+		if (frequenciesInput.get() == null) {
+			Codon codon = findCodonAlignment().getDataType();
+			this.rateMat = new EmpiricalRateMatrixReader(codon, matrixDirInput.get().getPath(), freqFileInput.get(), rateFileInput.get());
+			frequenciesInput.setValue(new Frequencies(new SimplexParam(normalise(rateMat.getFrequencies()))), this);
+		} else {
+			Log.info("EmpiricalCodonModel: using the frequencies input; the frequencies in "
+					+ freqFileInput.get() + " are not used.");
+		}
+
 		super.initAndValidate();
 
 		this.geneticCode = codonDataType.getGeneticCode();
 		this.mnmPenalty = mnmPenaltyInput.get();
 				
-		EmpiricalRateMatrixReader rMat = new EmpiricalRateMatrixReader(codonDataType, matrixDirInput.get().getPath(), freqFileInput.get(), rateFileInput.get());
-		this.rateMat = rMat;
+		if (this.rateMat == null) {
+			this.rateMat = new EmpiricalRateMatrixReader(codonDataType, matrixDirInput.get().getPath(), freqFileInput.get(), rateFileInput.get());
+		}
 
 		constructRateMap();
 		
 		checkForModelType();
-		
-		RealParameter freqs = frequencies.frequenciesInput.get();
-		if (freqs == null) {
-			throw new IllegalArgumentException("Expected a RealParameter in frequencies input, but found null. "
-					+ "Please specify a frequencies parameter so it can be initialised from the empirical rates.");
+	}
+
+	/** empirical frequencies published in papers are rounded, so they rarely sum to 1 exactly */
+	private static double[] normalise(double[] freqs) {
+		double sum = 0.0;
+		for (double f : freqs) {
+			sum += f;
 		}
-		freqs.setDimension(nrOfStates);
-		for (int i = 0; i < nrOfStates; i++) {
-			freqs.setValue(rateMat.frequencies[i]);
+		double[] normalised = freqs.clone();
+		if (sum > 0 && Math.abs(sum - 1.0) > 1e-10) {
+			for (int i = 0; i < normalised.length; i++) {
+				normalised[i] /= sum;
+			}
 		}
-		
+		return normalised;
 	}
 	
 	// decide which model to use: ECM_OMEGA_2K, ECM_OMEGA_9K, ECM_OMEGA_NU or ECM_OMEGA
 	private void checkForModelType() {
 		this.modelType = 0;
 		if(kappaInput.get() != null) {
-			if(kappaInput.get().getDimension() == 2) {
+			if(kappaInput.get().size() == 2) {
 				this.modelType = ECM_OMEGA_2K;
 				Log.info("Using model ECM+omega+2k");
-			} else {
+			} else if(kappaInput.get().size() == 9) {
 				this.modelType = ECM_OMEGA_9K;
 				Log.info("Using model ECM+omega+9k");
+			} else {
+				throw new IllegalArgumentException("kappa must have 2 (ECM+omega+2k) or 9 (ECM+omega+9k) entries, but has "
+						+ kappaInput.get().size());
 			}
 		}
 		if(mnmPenalty != null){
@@ -267,12 +303,12 @@ public class EmpiricalCodonModel extends M0Model {
 	
     // getters for parameters
 
-    public double getOmega() { return omegaInput.get().getValue(0); }
+    public double getOmega() { return omegaInput.get().get(); }
     
        
     public double getKappaTs() { 
     	if(kappaInput.get() != null) {
-    		return kappaInput.get().getValue(0);
+    		return kappaInput.get().get(0);
     	} else {
     		return 0.0;
     	}
@@ -280,7 +316,7 @@ public class EmpiricalCodonModel extends M0Model {
     
     public double getKappaTv() { 
     	if(kappaInput.get() != null) {
-    		return kappaInput.get().getValue(1);
+    		return kappaInput.get().get(1);
     	} else {
     		return 0.0;
     	}
@@ -288,7 +324,12 @@ public class EmpiricalCodonModel extends M0Model {
     
     public double[] getKappa() {
     	if(kappaInput.get() != null) {
-    		return kappaInput.get().getDoubleValues();
+    		RealVector<PositiveReal> kappa = kappaInput.get();
+    		double[] values = new double[kappa.size()];
+    		for (int i = 0; i < values.length; i++) {
+    			values[i] = kappa.get(i);
+    		}
+    		return values;
     	} else {
     		return new double[9];
     	}
@@ -297,7 +338,7 @@ public class EmpiricalCodonModel extends M0Model {
 
     public double getMultiNt() { 
     	if(mnmPenalty != null) {
-    		return mnmPenalty.getValue(0);
+    		return mnmPenalty.get(0);
     	} else {
     		return 0.0;
     	}

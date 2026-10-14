@@ -2,13 +2,15 @@ package codonmodels.util;
 
 import beast.base.core.BEASTInterface;
 import beast.base.core.BEASTObject;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.parameter.RealScalarParam;
 import beast.base.parser.XMLParser;
 import beast.base.parser.XMLParserException;
 import beast.base.util.Randomizer;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeParser;
 import codonmodels.CodonFrequencies;
@@ -210,8 +212,8 @@ public abstract class BenchmarkingSetup {
         CodonFrequencies codonFreq = new CodonFrequencies();
         codonFreq.initByName("pi", pi, "data", codonAlignment, "verbose", verbose);
 
-        RealParameter omega = new RealParameter(omegaValue);
-        RealParameter kappa = new RealParameter(kappaValue);
+        RealScalarParam<NonNegativeReal> omega = new RealScalarParam<>(Double.parseDouble(omegaValue), NonNegativeReal.INSTANCE);
+        RealScalarParam<PositiveReal> kappa = new RealScalarParam<>(Double.parseDouble(kappaValue), PositiveReal.INSTANCE);
 
         M0Model m0 = new M0Model();
         m0.initByName("omega", omega, "kappa", kappa, "frequencies", codonFreq, "verbose", verbose);

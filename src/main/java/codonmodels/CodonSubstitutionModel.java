@@ -32,12 +32,13 @@ import beast.base.core.Input;
 import beast.base.core.Log;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.datatype.DataType;
-import beast.base.evolution.likelihood.GenericTreeLikelihood;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.likelihood.GenericTreeLikelihood;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.datatype.Codon;
 import codonmodels.evolution.datatype.GeneticCode;
-import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.base.spec.evolution.substitutionmodel.BasicGeneralSubstitutionModel;
+import beast.base.spec.evolution.substitutionmodel.Frequencies;
 import beast.base.evolution.tree.Node;
 
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +48,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * This also uses new code to compute transition-prob matrix,
  * which is faster than
- * {@link GeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
+ * {@link BasicGeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
  *
  * @author Alexei Drummond
  * @author Marc A. Suchard
@@ -55,7 +56,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 @Description("Codon substitution model to construct an array of rate classes " +
         "using the current genetic code.")
-public class CodonSubstitutionModel extends GeneralSubstitutionModel {
+public class CodonSubstitutionModel extends BasicGeneralSubstitutionModel {
 
     final public Input<Boolean> verboseInput = new Input<>("verbose",
             "Print the rate classes in the rate matrix, etc.",
@@ -69,34 +70,13 @@ public class CodonSubstitutionModel extends GeneralSubstitutionModel {
     
     protected GeneticCode geneticCode;
 
-    public CodonSubstitutionModel() {
-        ratesInput.setRule(Input.Validate.FORBIDDEN); // only use internally
-    }
-
     @Override
     public void initAndValidate() {
         this.frequencies = frequenciesInput.get();
 //        if (! (frequencies instanceof CodonFrequencies) )
 //            throw new IllegalArgumentException("Codon frequencies is required by CodonSubstitutionModel !");
 
-        Alignment data = null;
-        if (frequencies.dataInput.get() != null && frequencies.dataInput.get() instanceof CodonAlignment) {
-        	data = frequencies.dataInput.get();
-        } else {
-        	for (BEASTInterface o : getOutputs()) {
-        		if (o instanceof SiteModel) {
-        			SiteModel sitemodel = (SiteModel) o;
-                	for (BEASTInterface o2 : sitemodel.getOutputs()) {
-                		if (o2 instanceof GenericTreeLikelihood) {
-                			GenericTreeLikelihood tl = (GenericTreeLikelihood) o2;
-                			data = tl.dataInput.get();
-                		}
-                	}        			
-        		}
-        	}
-        }
-        
-        CodonAlignment alignment = getCodonAlignment(data);
+        CodonAlignment alignment = findCodonAlignment();
         this.codonDataType = alignment.getDataType();
         geneticCode = codonDataType.getGeneticCode();
 
@@ -134,7 +114,7 @@ public class CodonSubstitutionModel extends GeneralSubstitutionModel {
 
     /**
      * Faster code to replace
-     * {@link GeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
+     * {@link BasicGeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
      *
      * @param startTime parent.getHeight()
      * @param endTime   node.getHeight()
@@ -151,7 +131,7 @@ public class CodonSubstitutionModel extends GeneralSubstitutionModel {
 
     /**
      * Faster code to replace
-     * {@link GeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
+     * {@link BasicGeneralSubstitutionModel#getTransitionProbabilities(Node, double, double, double, double[], boolean)}.
      * @param distance  distance = (startTime - endTime) * mean branch rate * rate for a site category.
      * @param iexp      iexp, without creating a new matrix each call.
      * @param matrix    P(t), without creating a new matrix each call.
@@ -217,6 +197,32 @@ public class CodonSubstitutionModel extends GeneralSubstitutionModel {
 
     protected CodonAlignment getCodonAlignment(Alignment data) {
         return CodonAlignment.toCodonAlignment(data);
+    }
+
+    /**
+     * Locate the codon alignment this model applies to: from the frequencies' data input if
+     * it is a CodonAlignment, otherwise from the tree likelihood this model's site model feeds.
+     * Can be called before initAndValidate (frequencies may still be unset, see EmpiricalCodonModel).
+     */
+    protected CodonAlignment findCodonAlignment() {
+        Alignment data = null;
+        Frequencies freqs = frequenciesInput.get();
+        if (freqs != null && freqs.dataInput.get() != null && freqs.dataInput.get() instanceof CodonAlignment) {
+        	data = freqs.dataInput.get();
+        } else {
+        	for (BEASTInterface o : getOutputs()) {
+        		if (o instanceof SiteModel) {
+        			SiteModel sitemodel = (SiteModel) o;
+                	for (BEASTInterface o2 : sitemodel.getOutputs()) {
+                		if (o2 instanceof GenericTreeLikelihood) {
+                			GenericTreeLikelihood tl = (GenericTreeLikelihood) o2;
+                			data = tl.dataInput.get();
+                		}
+                	}        			
+        		}
+        	}
+        }
+        return getCodonAlignment(data);
     }
 
     //TODO move to GeneralSubstitutionModel ?
@@ -330,11 +336,13 @@ public class CodonSubstitutionModel extends GeneralSubstitutionModel {
         return rateClass;
     }
 
-//    @Override
-//    protected void setupRelativeRates() {
-//        throw new UnsupportedOperationException("setupRelativeRates needs to be overridden " +
-//                "in the child class of CodonSubstitutionModel !");
-//    }
+    // BEAST 2.8: BasicGeneralSubstitutionModel declares setupRelativeRates abstract, and this class
+    // must stay concrete (it is a registered service provider), so the stub is live again.
+    @Override
+    public void setupRelativeRates() {
+        throw new UnsupportedOperationException("setupRelativeRates needs to be overridden " +
+                "in the child class of CodonSubstitutionModel !");
+    }
 
 
     @Override

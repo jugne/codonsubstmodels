@@ -2,7 +2,7 @@ package codonmodels.evolution.likelihood;
 
 import beast.base.core.Input;
 import beast.base.core.Log;
-import beast.base.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beast.base.inference.State;

@@ -3,10 +3,10 @@ package codonmodels.util;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.likelihood.DataAugTreeLikelihood;
 import codonmodels.evolution.tree.NodeStatesArray;
-import beast.base.evolution.likelihood.TreeLikelihood;
-import beast.base.evolution.operator.ScaleOperator;
 import beast.base.evolution.operator.Uniform;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.operator.ScaleTreeOperator;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeStatLogger;
 import beast.base.inference.Distribution;
@@ -202,7 +202,7 @@ public class DALikelihoodBenchmarking2 extends BenchmarkingSetup {
         Uniform operator1 = new Uniform();
         // Randomly select internal node (not root) and move node height uniformly in [children, parent].
         operator1.initByName("tree", tree, "weight", 10.0);
-        ScaleOperator operator2 = new ScaleOperator();
+        ScaleTreeOperator operator2 = new ScaleTreeOperator();
         operator2.initByName("tree", tree, "scaleFactor", 0.75, "weight", 3.0, "rootOnly", true); // scale root height
 //        operator.initByName("tree", tree, "scaleFactor", 0.7, "weight", 1.0); // scale tree
 

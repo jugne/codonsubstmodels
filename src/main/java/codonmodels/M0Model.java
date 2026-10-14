@@ -28,7 +28,9 @@ package codonmodels;
 import beast.base.core.Citation;
 import beast.base.core.Description;
 import beast.base.core.Input;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.type.RealScalar;
 
 /**
  * Yang model of codon evolution
@@ -43,10 +45,10 @@ import beast.base.inference.parameter.RealParameter;
          DOI = "10.1093/oxfordjournals.molbev.a040153")
 @Description("M0 codon substitution model, also called as GY94, published by Goldman and Yang 1994")
 public class M0Model extends CodonSubstitutionModel {//implements Loggable {
-    final public Input<RealParameter> kappaInput = new Input<>("kappa",
+    final public Input<RealScalar<PositiveReal>> kappaInput = new Input<>("kappa",
             "kappa parameter for transition-transversion rate ratio", Input.Validate.REQUIRED);
 
-    final public Input<RealParameter> omegaInput = new Input<>("omega",
+    final public Input<RealScalar<NonNegativeReal>> omegaInput = new Input<>("omega",
             "omega parameter to represent the nonsynonymous-synonymous rate ratio", Input.Validate.REQUIRED);
 
 
@@ -57,31 +59,14 @@ public class M0Model extends CodonSubstitutionModel {//implements Loggable {
     @Override
     public void initAndValidate() {
         super.initAndValidate();
-
-        if (omegaInput.get() != null) {
-	        double value = omegaInput.get().getValue();
-	        if(value < 0) {
-	            throw new RuntimeException("Negative Omega parameter value " + value);
-	        }//END: negative check
-	
-	        omegaInput.get().setBounds(Math.max(0.0, omegaInput.get().getLower()), omegaInput.get().getUpper());
-        }
-
-        if (kappaInput.get() != null) {
-	        double value = kappaInput.get().getValue();
-	        if(value < 0) {
-	            throw new RuntimeException("Negative kappa parameter value value " + value);
-	        }//END: negative check
-	
-	        kappaInput.get().setBounds(Math.max(0.0, kappaInput.get().getLower()), kappaInput.get().getUpper());
-        }
-
+        // BEAST 2.8: non-negativity of omega and kappa is enforced by their domains
+        // (NonNegativeReal / PositiveReal), so the 2.7 bound checks are gone.
     }
 
     @Override
 	public void setupRelativeRates() {
-        double kappa = kappaInput.get() != null ? kappaInput.get().getValue() : 1.0;
-        double omega = omegaInput.get().getValue();
+        double kappa = kappaInput.get() != null ? kappaInput.get().get() : 1.0;
+        double omega = omegaInput.get().get();
 
 //        this.synonymousRate = getSynonymousRate(kappa, omega);//not here
 

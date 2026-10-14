@@ -9,14 +9,14 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.evolution.datatype.Aminoacid;
-import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.base.spec.evolution.substitutionmodel.BasicGeneralSubstitutionModel;
 
 @Description("General codon model that satisfies rate matrix from aminoacid model")
 public class EmpiricalAACodonModel extends GeneralCodonSubstitutionModel {
 
-	final public Input<GeneralSubstitutionModel> aaModelInput = new Input<>("aaModel", "amino acid substitution model (with frequencies) used to constraint codon rates", Validate.REQUIRED);
+	final public Input<BasicGeneralSubstitutionModel> aaModelInput = new Input<>("aaModel", "amino acid substitution model (with frequencies) used to constraint codon rates", Validate.REQUIRED);
 
-	private GeneralSubstitutionModel aaModel;
+	private BasicGeneralSubstitutionModel aaModel;
 	private double [] codonRates;
 	private Map<String, List<Integer>> map;
 	private String aminoAcidCodeMap;

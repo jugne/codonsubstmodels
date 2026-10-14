@@ -9,8 +9,9 @@ import beast.base.core.Input.Validate;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.Sequence;
 import beast.base.evolution.branchratemodel.BranchRateModel;
+import beast.base.spec.evolution.branchratemodel.Base;
 import beast.base.evolution.datatype.DataType;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beast.base.parser.XMLProducer;
@@ -28,8 +29,8 @@ import codonmodels.evolution.datatype.GeneticCode;
 public class SimulatedCodonAlignment extends CodonAlignment {
    // final public Input<Alignment> m_data = new Input<>("data", "alignment data which specifies datatype and taxa of the beast.tree", Validate.REQUIRED);
     final public Input<Tree> m_treeInput = new Input<>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
-    final public Input<SiteModel.Base> m_pSiteModelInput = new Input<>("siteModel", "site model for leafs in the beast.tree", Validate.REQUIRED);
-    final public Input<BranchRateModel.Base> m_pBranchRateModelInput = new Input<>("branchRateModel",
+    final public Input<SiteModel> m_pSiteModelInput = new Input<>("siteModel", "site model for leafs in the beast.tree", Validate.REQUIRED);
+    final public Input<Base> m_pBranchRateModelInput = new Input<>("branchRateModel",
             "A model describing the rates on the branches of the beast.tree.");
     final public Input<Integer> m_sequenceLengthInput = new Input<>("sequencelength", "nr of samples to generate (default 1000).", 1000);
     final public Input<String> m_outputFileNameInput = new Input<>(
@@ -47,7 +48,7 @@ public class SimulatedCodonAlignment extends CodonAlignment {
     /**
      * site model used for generating samples *
      */
-    protected SiteModel.Base m_siteModel;
+    protected SiteModel m_siteModel;
     /**
      * branch rate model used for generating samples *
      */

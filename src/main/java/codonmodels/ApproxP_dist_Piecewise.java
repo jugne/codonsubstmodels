@@ -1,7 +1,9 @@
 package codonmodels;
 
 import beast.base.core.Input;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.parameter.RealScalarParam;
 import beast.base.core.Log;
 import beast.base.evolution.alignment.Alignment;
 import codonmodels.evolution.alignment.CodonAlignment;
@@ -257,8 +259,8 @@ public class ApproxP_dist_Piecewise extends CodonSubstitutionModel {
         CodonFrequencies codonFreq = new CodonFrequencies();
         codonFreq.initByName("pi", "equal", "data", codonAlignment, "verbose", true);
 
-        RealParameter omegaPara = new RealParameter(omega);
-        RealParameter kappaPara = new RealParameter(kappa);
+        RealScalarParam<NonNegativeReal> omegaPara = new RealScalarParam<>(Double.parseDouble(omega), NonNegativeReal.INSTANCE);
+        RealScalarParam<PositiveReal> kappaPara = new RealScalarParam<>(Double.parseDouble(kappa), PositiveReal.INSTANCE);
 
         M0Model m0Model = new M0Model();
         m0Model.initByName("omega", omegaPara, "kappa", kappaPara,

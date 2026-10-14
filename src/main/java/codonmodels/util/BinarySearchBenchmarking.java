@@ -129,7 +129,7 @@ public class BinarySearchBenchmarking {
     }
 
 
-    // BEAST 3 build: main code cannot depend on JUnit, so a minimal replacement of Assert.assertArrayEquals
+    // BEAST 2.8 build: main code cannot depend on JUnit, so a minimal replacement of Assert.assertArrayEquals
     private static void assertArrayEquals(double[] expected, double[] actual, double delta) {
         if (expected.length != actual.length)
             throw new AssertionError("array lengths differ: " + expected.length + " vs " + actual.length);

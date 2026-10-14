@@ -3,8 +3,8 @@ package codonmodels.util;
 import codonmodels.evolution.alignment.CodonAlignment;
 import codonmodels.evolution.likelihood.DataAugTreeLikelihood;
 import codonmodels.evolution.tree.NodeStatesArray;
-import beast.base.evolution.likelihood.TreeLikelihood;
-import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.spec.evolution.likelihood.TreeLikelihood;
+import beast.base.spec.evolution.sitemodel.SiteModel;
 import beast.base.evolution.tree.Tree;
 import beast.base.parser.XMLParserException;
 
