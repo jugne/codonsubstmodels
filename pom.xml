@@ -11,13 +11,39 @@
     <name>CodonSubstModels</name>
     <description>Codon substitution models for DNA (BEAST 2.8)</description>
 
+    <url>https://github.com/BEAST2-Dev/codonsubstmodels</url>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v2.1</name>
+            <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Dong (Walter) Xie</name>
+            <url>https://github.com/walterxie</url>
+        </developer>
+        <developer>
+            <name>Remco Bouckaert</name>
+            <url>https://github.com/rbouckaert</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/BEAST2-Dev/codonsubstmodels.git</connection>
+        <developerConnection>scm:git:ssh://github.com:BEAST2-Dev/codonsubstmodels.git</developerConnection>
+        <url>https://github.com/BEAST2-Dev/codonsubstmodels</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>25</maven.compiler.release>
 
-        <!-- D2: development against the workspace beast3 repository (../beast3, mvn install), i.e. BEAST 2.8.0-SNAPSHOT; the release switches to the released 2.8.0 beta -->
-        <beast.version>2.8.0-SNAPSHOT</beast.version>
+        <!-- D2: released BEAST 2.8.0-rc1 from Maven Central (development used 2.8.0-SNAPSHOT from ../beast3, last hash 054cc56) -->
+        <beast.version>2.8.0-rc1</beast.version>
         <javafx.version>25.0.2</javafx.version>
         <beast.module>beast.base</beast.module>
         <beast.main>beast.base.minimal.BeastMain</beast.main>
@@ -205,4 +231,52 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Maven Central publication (mvn -Prelease clean deploy, run by CI on a v* tag) -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.11.2</version>
+                        <configuration>
+                            <doclint>none</doclint>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals><goal>jar</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals><goal>sign</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.11.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
