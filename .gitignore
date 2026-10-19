@@ -18,6 +18,7 @@ src/META-INF/
 
 # Log file
 *.log
+*.trees
 
 # BlueJ files
 *.ctxt
