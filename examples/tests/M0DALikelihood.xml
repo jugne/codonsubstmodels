@@ -125,7 +125,7 @@
     <parameter id="m0.omega" value="0.08" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="NonNegativeReal"/>
     <parameter id="m0.kappa" value="15.0" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal"/>
     <parameter id="popSize" value="0.2" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real"/>
-    <parameter id="clockRate" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+    <stateNode id="clockRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</stateNode>
 
     <substModel spec="codonmodels.M0Model" id="m0" verbose="false">
         <omega idref="m0.omega"/>
@@ -138,9 +138,9 @@
     <!-- site model                                                              -->
     <siteModel spec="beast.base.spec.evolution.sitemodel.SiteModel" id="siteModel" gammaCategoryCount="1">
         <!--
-        <parameter id="mutationRate.m0" estimate="false" name="mutationRate">1.0</parameter>
-        <parameter id="gammaShape.m0" estimate="false" name="shape">1.0</parameter>
-        <parameter id="proportionInvariant.m0" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+        <mutationRate id="mutationRate.m0" estimate="false">1.0</mutationRate>
+        <shape id="gammaShape.m0" estimate="false">1.0</shape>
+        <proportionInvariant id="proportionInvariant.m0" estimate="false" lower="0.0" upper="1.0">0.0</proportionInvariant>
          -->
         <substModel idref="m0"/>
     </siteModel>
@@ -156,7 +156,6 @@
         <nodesStates idref="nodesStates"/>
         <tree idref="tree"/>
         <siteModel idref="siteModel"/>
-<!--        <branchRateModel id="StrictClock.m0" spec="beast.base.evolution.branchratemodel.StrictClockModel" clock.rate="@clockRate"/>-->
     </distribution>
 
     <run spec="MCMC" id="mcmc" chainLength="300000"> <!--autoOptimize="true"-->
@@ -176,18 +175,18 @@
                 </distribution>
                 <distribution id="LogNormalDistributionModel.0" spec="beast.base.spec.inference.distribution.LogNormal" param="@m0.omega">
                         <!-- "1.9064e-02" "1.3534e-01" "9.6075e-01" -->
-                        <parameter id="RealParameter.1" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-2</parameter>
-                        <parameter id="RealParameter.2" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1</parameter>
+                        <M id="RealParameter.1" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-2</M>
+                        <S id="RealParameter.2" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1</S>
                     </distribution>
                 <distribution id="LogNormalDistributionModel.1" spec="beast.base.spec.inference.distribution.LogNormal" param="@m0.kappa">
                         <!-- 2 to 40  "1.0408e+00" "7.3891e+00" "5.2455e+01" -->
-                        <parameter id="RealParameter.3" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">2</parameter>
-                        <parameter id="RealParameter.4" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1</parameter>
+                        <M id="RealParameter.3" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">2</M>
+                        <S id="RealParameter.4" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1</S>
                     </distribution>
                 <distribution id="LogNormalDistributionModel.2" spec="beast.base.spec.inference.distribution.LogNormal" param="@popSize">
                         <!-- "7.1550e-03" "1.3534e-01" "2.5598e+00" -->
-                        <parameter id="PopM" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-2</parameter>
-                        <parameter id="PopS" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.5</parameter>
+                        <M id="PopM" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-2</M>
+                        <S id="PopS" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.5</S>
                     </distribution>
             </distribution>
             <distribution id="likelihood" spec="beast.base.inference.CompoundDistribution" useThreads="false">
@@ -195,22 +194,10 @@
             </distribution>
         </distribution>
 
-        <!-- add this if estimating clock rate, for example, tip dates or MRCA analysis.
-        <operator id="StrictClockRateScaler" spec="ScaleOperator" parameter="@clockRate" scaleFactor="0.75" weight="1.0"/>
 
-        <operator id="strictClockUpDownOperator" spec="UpDownOperator" scaleFactor="0.75" weight="3.0">
-            <up idref="clockRate"/>
-            <down idref="tree"/>
-        </operator>
-        -->
 
-<!--        <operator id='omegaScaler' spec='ScaleOperator' parameter="@m0.omega" scaleFactor="0.5" weight="0.5" />-->
 
-<!--        <operator id='kappaScaler' spec='ScaleOperator' parameter="@m0.kappa" scaleFactor="0.5" weight="3"/>-->
 
-<!--        <operator id='popSizeScaler' spec='ScaleOperator' parameter="@popSize" scaleFactor="0.75" weight="0.5"/>-->
-
-<!--        <operator id='treeScaler' spec='ScaleOperator' scaleFactor="0.5" tree="@tree" weight="3.0"/>-->
 
         <operator id="GibbsSampler" spec="GibbsSamplingOperator" nodesStates="@nodesStates" tree="@tree" DATreeLikelihood="@daTreeLikelihood" weight="15.0"/>
 
@@ -218,7 +205,6 @@
 
         <operator id="UniformOperator" tree="@tree" weight="15.0" spec="beast.base.evolution.operator.Uniform"/>
 
-<!--        <operator id="SubtreeSlide" spec="SubtreeSlide" tree="@tree" size="0.1" weight="15.0"/>-->
 
 <!--        <operator id="Narrow" spec="Exchange" tree="@tree" weight="15.0"/>-->
 
@@ -250,9 +236,6 @@
 <!--            <log id="ESS.1" spec="util.ESS" arg="@m0.kappa"/>-->
         </logger>
 
-<!--        <logger logEvery="5000" fileName="test.m0.trees" mode="tree">-->
-<!--            <log id="TreeWithMetaDataLogger.t:Dengue4" spec="beast.base.evolution.TreeWithMetaDataLogger" tree="@tree"/>-->
-<!--        </logger>-->
     </run>
 
 </beast>

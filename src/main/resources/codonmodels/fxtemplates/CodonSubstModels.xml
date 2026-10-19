@@ -121,10 +121,6 @@
             beast.base.inference.Logger.model,
             beast.base.spec.evolution.tree.coalescent.BayesianSkyline.treeIntervals,
             beast.base.spec.evolution.tree.coalescent.BayesianSkyline.tree,
-            beast.base.inference.parameter.RealParameter.keys,
-            beast.base.inference.parameter.BooleanParameter.keys,
-            beast.base.inference.parameter.IntegerParameter.keys,
-            beast.base.inference.parameter.CompoundRealParameter.keys,
             beast.base.spec.inference.parameter.RealScalarParam.domain,
             beast.base.spec.inference.parameter.IntScalarParam.domain,
             beast.base.spec.inference.parameter.RealVectorParam.domain,
@@ -350,7 +346,7 @@ ClusterTree/clusterType/,
 
             <!-- default tree prior -->
             <plugin spec='beast.base.spec.evolution.speciation.YuleModel' id="YuleModel.t:$(n)" tree='@Tree.t:$(n)'>
-                <parameter name='birthDiffRate' spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" id="birthRate.t:$(n)" value='1.0'/>
+                <birthDiffRate spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" id="birthRate.t:$(n)" value='1.0'/>
             </plugin>
 
             <plugin id='TreeHeight.t:$(n)' spec='beast.base.evolution.tree.TreeStatLogger' tree='@Tree.t:$(n)'/>
@@ -572,8 +568,6 @@ ClusterTree/clusterType/,
         <logger id='screenlog' logEvery="1000">
 	        <!--model idref='posterior'/-->
             <log idref="posterior"/>
-            <!--this ESS is computed solely based on the current BEAST run (not the chain)-->
-      	    <!--<ESS spec='ESS' name='log' arg="@posterior"/>-->
             <log idref="likelihood"/>
             <log idref="prior"/>
         </logger>
@@ -615,8 +609,6 @@ ClusterTree/clusterType/,
         <logger id='screenlog' logEvery="1000">
 	        <!--model idref='posterior'/-->
             <log idref="posterior"/>
-            <!--this ESS is computed solely based on the current BEAST run (not the chain)-->
-      	    <!--<ESS spec='ESS' name='log' arg="@posterior"/>-->
             <log idref="likelihood"/>
             <log idref="prior"/>
         </logger>

@@ -20,8 +20,8 @@
       <data idref="codon0"/>
 
                     <siteModel id="trueSiteModel.s:codon" spec="beast.base.spec.evolution.sitemodel.SiteModel" gammaCategoryCount="4" shape="0.3639569748087765">
-                        <parameter id="truemutationRate.s:codon" estimate="false" name="mutationRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
-                        <parameter id="trueproportionInvariant.s:codon" estimate="false" name="proportionInvariant" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</parameter>
+                        <mutationRate id="truemutationRate.s:codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</mutationRate>
+                        <proportionInvariant id="trueproportionInvariant.s:codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</proportionInvariant>
                         
                         <substModel id="trueGCS.s:codon" spec="codonmodels.GeneralCodonSubstitutionModel" omega="0.03092812548417194" substitutionRate="1 1 1" mnmPenalty="0 0">
                         	
@@ -51,25 +51,25 @@
                 <taxonset id="TaxonSet.codon" spec="TaxonSet" alignment="@codon">
                 </taxonset>
             </tree>
-            <parameter id="M0.omega.s:codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="1" domain="NonNegativeReal">1.0</parameter>
-            <parameter id="gammaShape.s:codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
-            <parameter id="popSize.t:codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">0.3</parameter>
+            <stateNode id="M0.omega.s:codon" spec="beast.base.spec.inference.parameter.RealVectorParam" dimension="1" domain="NonNegativeReal">1.0</stateNode>
+            <stateNode id="gammaShape.s:codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</stateNode>
+            <stateNode id="popSize.t:codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">0.3</stateNode>
 	        <stateNode id="BMT_ModelIndicator.s:codon" spec="beast.base.spec.inference.parameter.IntScalarParam" domain="NonNegativeInt">5</stateNode>
-    	    <parameter id="BMT_Rates.s:codon" dimension="6" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</parameter>
+    	    <stateNode id="BMT_Rates.s:codon" dimension="6" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</stateNode>
 
 	        <stateNode id="BMT_ModelIndicator2.s:codon" spec="beast.base.spec.inference.parameter.IntScalarParam" domain="NonNegativeInt">5</stateNode>
-    	    <parameter id="BMT_Rates2.s:codon" dimension="6" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</parameter>
+    	    <stateNode id="BMT_Rates2.s:codon" dimension="6" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</stateNode>
 	        <stateNode id="BMT_ModelIndicator3.s:codon" spec="beast.base.spec.inference.parameter.IntScalarParam" domain="NonNegativeInt">5</stateNode>
-    	    <parameter id="BMT_Rates3.s:codon" dimension="6" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</parameter>
+    	    <stateNode id="BMT_Rates3.s:codon" dimension="6" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</stateNode>
 
             <stateNode idref="BMT_frequencies1.s:codon"/>
-            <parameter id="mnmPenalty.s:codon" dimension="2" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="NonNegativeReal">0.0</parameter>
-            <parameter id="substitutionRate.s:codon" dimension="3" name="stateNode" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</parameter>
+            <stateNode id="mnmPenalty.s:codon" dimension="2" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="NonNegativeReal">0.0</stateNode>
+            <stateNode id="substitutionRate.s:codon" dimension="3" spec="beast.base.spec.inference.parameter.RealVectorParam" domain="PositiveReal">1.0</stateNode>
         </state>
         
         <init id="RandomTree.t:codon" spec="beast.base.spec.evolution.tree.coalescent.RandomTree" estimate="false" initial="@Tree.t:codon" taxa="@codon">
             <populationModel id="ConstantPopulation0.t:codon" spec="beast.base.spec.evolution.tree.coalescent.ConstantPopulation">
-                <parameter id="randomPopSize.t:codon" name="popSize" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                <popSize id="randomPopSize.t:codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</popSize>
             </populationModel>
         </init>
         
@@ -85,11 +85,11 @@
 		        <distribution id="BMT_RatesPrior3.s:codon" spec="bmodeltest.math.distributions.NucleotideRevJumpSubstModelRatePrior" modelIndicator="@BMT_ModelIndicator3.s:codon" x="@BMT_Rates3.s:codon" priorType="onTransitionsAndTraversals" substModel="@RevJump3.s:codon"/>
 
                 <distribution id="LogNormalDistributionModel.0" spec="beast.base.spec.inference.distribution.IID" param="@M0.omega.s:codon"><distr spec="beast.base.spec.inference.distribution.LogNormal">
-                        <parameter id="RealParameter.0" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-3.0</parameter>
-                        <parameter id="RealParameter.1" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</parameter>
+                        <M id="RealParameter.0" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-3.0</M>
+                        <S id="RealParameter.1" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</S>
                     </distr></distribution>
                 <distribution id="Exponential.0" spec="beast.base.spec.inference.distribution.Exponential" param="@gammaShape.s:codon">
-                        <parameter id="RealParameter.4" estimate="false" name="mean" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                        <mean id="RealParameter.4" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</mean>
                     </distribution>
                 <distribution id="PopSizePrior.t:codon" spec="beast.base.spec.inference.distribution.LogNormal" param="@popSize.t:codon" meanInRealSpace="true" M="1.0" S="0.05"/>
                 
@@ -98,8 +98,8 @@
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
                 <distribution id="treeLikelihood.codon" spec="beast.base.spec.evolution.likelihood.ThreadedTreeLikelihood" data="@codon" tree="@Tree.t:codon" useAmbiguities="true">
                     <siteModel id="SiteModel.s:codon" spec="beast.base.spec.evolution.sitemodel.SiteModel" gammaCategoryCount="4" shape="@gammaShape.s:codon">
-                        <parameter id="mutationRate.s:codon" estimate="false" name="mutationRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
-                        <parameter id="proportionInvariant.s:codon" estimate="false" name="proportionInvariant" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</parameter>
+                        <mutationRate id="mutationRate.s:codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</mutationRate>
+                        <proportionInvariant id="proportionInvariant.s:codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</proportionInvariant>
                         
                         <substModel id="GCS.s:codon" spec="codonmodels.GeneralCodonSubstitutionModel" omega="@M0.omega.s:codon" substitutionRate="@substitutionRate.s:codon" mnmPenalty="@mnmPenalty.s:codon">
                         	<substModel id="RevJump.s:codon" spec="bmodeltest.evolution.substitutionmodel.NucleotideRevJumpSubstModel" modelIndicator="@BMT_ModelIndicator.s:codon" rates="@BMT_Rates.s:codon" modelSet="transitionTransversionSplit">
@@ -118,7 +118,7 @@
                         </substModel>
                     </siteModel>
                     <branchRateModel id="StrictClock.c:codon" spec="beast.base.spec.evolution.branchratemodel.StrictClockModel">
-                        <parameter id="clockRate.c:codon" estimate="false" name="clock.rate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                        <clock.rate id="clockRate.c:codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</clock.rate>
                     </branchRateModel>
                 </distribution>
             </distribution>

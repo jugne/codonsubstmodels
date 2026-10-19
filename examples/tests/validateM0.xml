@@ -10,8 +10,8 @@
 
     <parameter id="m0.omega" value="[OmegaHere]" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="NonNegativeReal"/>
     <parameter id="m0.kappa" value="[KappaHere]" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal"/>
-    <parameter id="clockRate" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
-    <parameter id="birthRate" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+    <stateNode id="clockRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</stateNode>
+    <stateNode id="birthRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</stateNode>
 
     <substModel spec="codonmodels.M0Model" id="m0">
         <omega idref="m0.omega"/>
@@ -53,13 +53,13 @@
 
                 <distribution id="LogNormalDistributionModel.0" spec="beast.base.spec.inference.distribution.LogNormal" param="@m0.omega">
                         <!-- m -2  s 1   "1.9064e-02" "1.3534e-01" "9.6075e-01" -->
-                        <parameter id="RealParameter.1" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[OmegaLogNormalM]</parameter>
-                        <parameter id="RealParameter.2" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[OmegaLogNormalS]</parameter>
+                        <M id="RealParameter.1" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[OmegaLogNormalM]</M>
+                        <S id="RealParameter.2" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[OmegaLogNormalS]</S>
                     </distribution>
                 <distribution id="LogNormalDistributionModel.1" spec="beast.base.spec.inference.distribution.LogNormal" param="@m0.kappa">
                         <!-- m 2  s 1   "1.0408e+00" "7.3891e+00" "5.2455e+01" -->
-                        <parameter id="RealParameter.3" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[KappaLogNormalM]</parameter>
-                        <parameter id="RealParameter.4" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[KappaLogNormalM]</parameter>
+                        <M id="RealParameter.3" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[KappaLogNormalM]</M>
+                        <S id="RealParameter.4" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">[KappaLogNormalM]</S>
                     </distribution>
             </distribution>
             <distribution id="likelihood" spec="beast.base.inference.CompoundDistribution" useThreads="true">
@@ -67,21 +67,12 @@
             </distribution>
         </distribution>
 
-        <!-- fix rate to 1
-        <operator id="StrictClockRateScaler" spec="ScaleOperator" parameter="@clockRate" scaleFactor="0.75" weight="1.0"/>
-
-        <operator id="strictClockUpDownOperator" spec="UpDownOperator" scaleFactor="0.75" weight="3.0">
-            <up idref="clockRate"/>
-            <down idref="tree"/>
-        </operator>
-        -->
 
         <operator id="omegaScaler" parameter="@m0.omega" scaleFactor="0.5" weight="0.5" spec="beast.base.spec.inference.operator.ScaleOperator"/>
 
         <operator id="kappaScaler" parameter="@m0.kappa" scaleFactor="0.5" weight="3" spec="beast.base.spec.inference.operator.ScaleOperator"/>
 
         <!-- fix birthRate to 1-->
-        <!--<operator id="birthRateScaler" spec="ScaleOperator" parameter="@birthRate" scaleFactor="0.75" weight="3.0"/>-->
 
         <operator id="treeScaler" scaleFactor="0.5" tree="@tree" weight="3.0" spec="beast.base.spec.evolution.operator.ScaleTreeOperator"/>
 
@@ -116,9 +107,6 @@
             <log idref="m0.kappa"/>
         </logger>
 
-        <!--<logger logEvery="2000" fileName="test.m0.trees" mode="tree">-->
-            <!--<log id="TreeWithMetaDataLogger.t:Dengue4" spec="beast.base.evolution.TreeWithMetaDataLogger" tree="@tree"/>-->
-        <!--</logger>-->
     </run>
 
 </beast>

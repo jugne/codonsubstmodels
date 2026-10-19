@@ -27,15 +27,15 @@
                     </alignment>
                 </taxonset>
             </tree>
-            <parameter id="M0.omega.s:ca.codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="NonNegativeReal">1.0</parameter>
-            <parameter id="M0.kappa.s:ca.codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">2.0</parameter>
-            <parameter id="gammaShape.s:ca.codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
-            <parameter id="popSize.t:ca.codon" name="stateNode" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">0.3</parameter>
+            <stateNode id="M0.omega.s:ca.codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="NonNegativeReal">1.0</stateNode>
+            <stateNode id="M0.kappa.s:ca.codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">2.0</stateNode>
+            <stateNode id="gammaShape.s:ca.codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</stateNode>
+            <stateNode id="popSize.t:ca.codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">0.3</stateNode>
         </state>
         
         <init id="RandomTree.t:ca.codon" spec="beast.base.spec.evolution.tree.coalescent.RandomTree" estimate="false" initial="@Tree.t:ca.codon" taxa="@ca.codon">
             <populationModel id="ConstantPopulation0.t:ca.codon" spec="beast.base.spec.evolution.tree.coalescent.ConstantPopulation">
-                <parameter id="randomPopSize.t:ca.codon" name="popSize" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                <popSize id="randomPopSize.t:ca.codon" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</popSize>
             </populationModel>
         </init>
         
@@ -46,23 +46,23 @@
                     <treeIntervals id="TreeIntervals.t:ca.codon" spec="beast.base.evolution.tree.TreeIntervals" tree="@Tree.t:ca.codon"/>
                 </distribution>
                 <distribution id="LogNormalDistributionModel.1" spec="beast.base.spec.inference.distribution.LogNormal" param="@M0.kappa.s:ca.codon">
-                        <parameter id="RealParameter.2" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">2.0</parameter>
-                        <parameter id="RealParameter.3" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</parameter>
+                        <M id="RealParameter.2" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">2.0</M>
+                        <S id="RealParameter.3" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</S>
                     </distribution>
                 <distribution id="LogNormalDistributionModel.0" spec="beast.base.spec.inference.distribution.LogNormal" param="@M0.omega.s:ca.codon">
-                        <parameter id="RealParameter.0" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-3.0</parameter>
-                        <parameter id="RealParameter.1" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</parameter>
+                        <M id="RealParameter.0" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">-3.0</M>
+                        <S id="RealParameter.1" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.25</S>
                     </distribution>
                 <distribution id="Exponential.0" spec="beast.base.spec.inference.distribution.Exponential" param="@gammaShape.s:ca.codon">
-                        <parameter id="RealParameter.4" estimate="false" name="mean" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                        <mean id="RealParameter.4" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</mean>
                     </distribution>
                 <distribution id="PopSizePrior.t:ca.codon" spec="beast.base.spec.inference.distribution.Gamma" param="@popSize.t:ca.codon"><alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.01" estimate="false"/><theta spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="100.0" estimate="false"/></distribution>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
                 <distribution id="treeLikelihood.ca.codon" spec="beast.base.spec.evolution.likelihood.ThreadedTreeLikelihood" data="@ca.codon" tree="@Tree.t:ca.codon" useAmbiguities="true">
                     <siteModel id="SiteModel.s:ca.codon" spec="beast.base.spec.evolution.sitemodel.SiteModel" gammaCategoryCount="4" shape="@gammaShape.s:ca.codon">
-                        <parameter id="mutationRate.s:ca.codon" estimate="false" name="mutationRate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</parameter>
-                        <parameter id="proportionInvariant.s:ca.codon" estimate="false" name="proportionInvariant" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</parameter>
+                        <mutationRate id="mutationRate.s:ca.codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal">1.0</mutationRate>
+                        <proportionInvariant id="proportionInvariant.s:ca.codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="UnitInterval">0.0</proportionInvariant>
                         <substModel id="M0.s:ca.codon" spec="codonmodels.M0Model" kappa="@M0.kappa.s:ca.codon" omega="@M0.omega.s:ca.codon">
                             <frequencies id="codonFreqs.s:ca.codon" spec="beast.base.spec.evolution.substitutionmodel.Frequencies" estimate="false"> 
                             	<frequencies dimension="60" value="0.0166666666666667" spec="beast.base.spec.inference.parameter.SimplexParam"/>
@@ -70,7 +70,7 @@
                         </substModel>
                     </siteModel>
                     <branchRateModel id="StrictClock.c:ca.codon" spec="beast.base.spec.evolution.branchratemodel.StrictClockModel">
-                        <parameter id="clockRate.c:ca.codon" estimate="false" name="clock.rate" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
+                        <clock.rate id="clockRate.c:ca.codon" estimate="false" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</clock.rate>
                     </branchRateModel>
                 </distribution>
             </distribution>
