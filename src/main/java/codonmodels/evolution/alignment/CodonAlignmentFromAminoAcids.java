@@ -78,7 +78,7 @@ public class CodonAlignmentFromAminoAcids extends CodonAlignment {
     public CodonAlignmentFromAminoAcids(Alignment alignment, GeneticCode geneticCode) {
         this();
         if (alignment.getID() != null)
-            this.setID("ca." + alignment.getID()); // make CodonAlignment ID not null
+            this.setID("ca_" + alignment.getID()); // make CodonAlignment ID not null (no dot: BEAUti derives the partition name from the first dot)
         DataType alignmentType = alignment.getDataType();
         if (! (alignmentType instanceof Aminoacid) ) {
             throw new IllegalArgumentException("CodonAlignment currently only support to wrap the aminoacid alignment !");
