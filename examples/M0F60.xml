@@ -50,7 +50,7 @@
                 <distribution id="Exponential.0" spec="beast.base.spec.inference.distribution.Exponential" param="@gammaShape.s:ca.codon">
                         <parameter id="RealParameter.4" estimate="false" name="mean" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1.0</parameter>
                     </distribution>
-                <distribution id="PopSizePrior.t:ca.codon" spec="beast.base.spec.inference.distribution.LogUniform" param="@popSize.t:ca.codon"><lower spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0E-6"/><upper spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0E3"/></distribution>
+                <distribution id="PopSizePrior.t:ca.codon" spec="beast.base.spec.inference.distribution.Gamma" param="@popSize.t:ca.codon"><alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.01" estimate="false"/><theta spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="100.0" estimate="false"/></distribution>
             </distribution>
             <distribution id="likelihood" spec="CompoundDistribution" useThreads="true">
                 <distribution id="treeLikelihood.ca.codon" spec="beast.base.spec.evolution.likelihood.ThreadedTreeLikelihood" data="@ca.codon" tree="@Tree.t:ca.codon">

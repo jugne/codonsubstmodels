@@ -182,7 +182,7 @@
                         <parameter id="RealParameter.3" estimate="false" name="M" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">2</parameter>
                         <parameter id="RealParameter.4" estimate="false" name="S" spec="beast.base.spec.inference.parameter.RealScalarParam" domain="Real">1</parameter>
                     </distribution>
-                <distribution id="PopSizePrior" spec="beast.base.spec.inference.distribution.LogUniform" param="@popSize"><lower spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0E-6"/><upper spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" estimate="false" value="1.0E3"/></distribution>
+                <distribution id="PopSizePrior" spec="beast.base.spec.inference.distribution.Gamma" param="@popSize"><alpha spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="0.01" estimate="false"/><theta spec="beast.base.spec.inference.parameter.RealScalarParam" domain="PositiveReal" value="100.0" estimate="false"/></distribution>
             </distribution>
             <distribution id="likelihood" spec="beast.base.inference.CompoundDistribution" useThreads="true">
                 <distribution idref="treeLikelihood"/>
