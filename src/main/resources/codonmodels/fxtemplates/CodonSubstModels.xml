@@ -1,4 +1,4 @@
-<!-- BEAST 2.8 CodonSubstModels template. Built from beast-fx fxtemplates/Standard.xml (beast3 054cc56);
+<!-- BEAST 2.8 CodonSubstModels template. Built from the BEAST 2.8 beast-fx fxtemplates/Standard.xml;
      differences: codon packages in the namespace, Codon Alignment provider, CodonPartitionTemplate,
      mergepoint codonSubstModelTemplates (filled by CMSubstModels.xml) and the M0Model suppress entries. -->
 <beast version='2.8'
