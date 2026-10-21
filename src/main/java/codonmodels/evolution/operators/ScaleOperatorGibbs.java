@@ -6,11 +6,14 @@ import beast.base.evolution.tree.Tree;
 import beast.base.spec.evolution.operator.ScaleTreeOperator;
 
 /**
- * Tree scale operator followed by Gibbs sampling of the internal node states.
+ * Run Gibbs sampler {@link GibbsSampler} after the tree scale operator proposal is accepted.
  *
  * BEAST 2.8: rebased from the legacy beast.base.evolution.operator.ScaleOperator (which scaled
  * either a parameter or a tree) onto beast.base.spec.evolution.operator.ScaleTreeOperator.
  * The parameter-scaling branch of the 2.7 class (commented out there) is gone with it.
+ *
+ * @author Walter Xie
+ * @author Ugne Stolz (updated for BEAST 2.8)
  */
 public class ScaleOperatorGibbs extends ScaleTreeOperator {
 
