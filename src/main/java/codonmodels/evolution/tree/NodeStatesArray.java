@@ -610,14 +610,6 @@ public class NodeStatesArray extends StateNode {
     }
 
 
-    public int getDimension() { // use getInternalNodeCount() or getSiteCount()
-        throw new UnsupportedOperationException("use getInternalNodeCount() or getSiteCount()");
-    }
-
-    public double getArrayValue(int dim) { // use getNodeStates(int)
-        throw new UnsupportedOperationException("use getNodeStates(int)");
-    }
-
 //    /**
 //     * Internal node states changed
 //     * @return
@@ -761,11 +753,6 @@ public class NodeStatesArray extends StateNode {
 
     @Override
     public void fromXML(org.w3c.dom.Node node) {
-        throw new UnsupportedOperationException("Unsupported");
-    }
-
-    // BEAST 2.8: StateNode no longer declares scale(double); kept for API compatibility
-    public int scale(double scale) {
         throw new UnsupportedOperationException("Unsupported");
     }
 

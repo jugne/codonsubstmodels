@@ -48,7 +48,7 @@ import codonmodels.evolution.datatype.Codon;
 @Description("Empirical model of codon evolution")
 public class EmpiricalCodonModel extends CodonSubstitutionModel {
 
-	// BEAST 2.8 (D3): no longer inherits kappa/omega from M0Model, because kappa here is a
+	// BEAST 2.8: no longer inherits kappa/omega from M0Model, because kappa here is a
 	// vector of 2 (ECM+omega+2k) or 9 (ECM+omega+9k) values while M0's kappa is a scalar.
 	final public Input<RealScalar<NonNegativeReal>> omegaInput = new Input<>("omega",
             "omega parameter to represent the nonsynonymous-synonymous rate ratio");
@@ -81,7 +81,7 @@ public class EmpiricalCodonModel extends CodonSubstitutionModel {
 
 
 	public EmpiricalCodonModel() {
-		// BEAST 2.8 (D7): frequencies are optional; if absent they are derived from freqFile
+		// BEAST 2.8: frequencies are optional; if absent they are derived from freqFile
 		frequenciesInput.setRule(Validate.OPTIONAL);
 	}
 	
@@ -98,7 +98,7 @@ public class EmpiricalCodonModel extends CodonSubstitutionModel {
 
 	@Override
 	public void initAndValidate() {
-		// BEAST 2.8 (D7): honour a user-supplied frequencies input (ECM+F), otherwise derive the
+		// BEAST 2.8: honour a user-supplied frequencies input (ECM+F), otherwise derive the
 		// equilibrium frequencies from the empirical frequency file, as the spec
 		// EmpiricalSubstitutionModel does. The derived Frequencies must be in place before
 		// CodonSubstitutionModel.initAndValidate reads it.

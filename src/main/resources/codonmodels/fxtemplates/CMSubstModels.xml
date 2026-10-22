@@ -174,7 +174,7 @@ MutationRatePrior/index/=Priors/MutationRatePrior/
         </subtemplate>
 
 
-        <!-- codon frequency models: pi options of codonmodels.CodonFrequencies (D5: subtemplates replace the
+        <!-- codon frequency models: pi options of codonmodels.CodonFrequencies (subtemplates replace the
              2.7 CodonFrequenciesInputEditor). The data input is the codon alignment of the partition. -->
         <subtemplate id='equal' class='codonmodels.CodonFrequencies' mainid='equalFreqs.s:$(n)'
                      suppressInputs="codonmodels.CodonFrequencies.estimate,
